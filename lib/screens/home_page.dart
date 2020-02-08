@@ -10,131 +10,137 @@ import 'package:flutter_app/util/constant.dart';
 import 'package:flutter_app/util/sqlite.dart';
 import 'package:flutter_app/util/widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:toast/toast.dart';
 import 'favorites.dart';
 
 class homepage extends StatelessWidget {
   static final String id = "homepage";
   var alldata = data.getInstance();
+
+  void fillallfav() {}
   Future<List<itemImage>> getfav() async {
     var dbhepler = DBHelper();
-    Future<List<itemImage>> favs = dbhepler.getfavorites();
-
+    List<itemImage> favs = await dbhepler.getfavorites();
+    allImage().favorites.addAll(favs);
     return favs;
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(children: <Widget>[
-              ShowMore(
-                  text: 'Favorites',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Favorites(),
-                      ),
-                    );
-                  }),
-              FutureBuilder<List>(
-                future: Provider.of<DataProvider>(context).getfav(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    return favoriteSlider(allfav: snapshot.data);
-                  } else if (snapshot.hasError)
-                    return Container(child: Text("error"));
-                  else
-                    return Container(
-                        child:
-                            Text("feils")); //favoriteSlider(alldata: alldata);
-                },
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "Latest",
-                  style: TextStyle(
-                    fontSize: 22.0,
-                    fontFamily: 'Caveat',
+    return Consumer<allImage>(
+      builder: (context, temp, child) => MaterialApp(
+        home: Scaffold(
+          body: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(children: <Widget>[
+                ShowMore(
+                    text: 'Favorites',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Favorites(),
+                        ),
+                      );
+                    }),
+                FutureBuilder<List>(
+                  future: getfav(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return favoriteSlider(allfav: snapshot.data);
+                    } else if (snapshot.hasError)
+                      return Container(child: Text("error"));
+                    else
+                      return Container(
+                          child: Text(
+                              "feils")); //favoriteSlider(alldata: alldata);
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "Latest",
+                    style: TextStyle(
+                      fontSize: 22.0,
+                      fontFamily: 'Caveat',
+                    ),
                   ),
                 ),
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height,
-                child: GridView.builder(
-                  shrinkWrap: true,
-                  physics: BouncingScrollPhysics(),
-                  itemCount: alldata.allImage.length == null
-                      ? 0
-                      : alldata.allImage.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 4),
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(0.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => WallpaperPage(
-                                heroId: index,
-                                allimage: alldata.allImage,
+                Container(
+                  height: MediaQuery.of(context).size.height,
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    physics: BouncingScrollPhysics(),
+                    itemCount: alldata.allImage.length == null
+                        ? 0
+                        : alldata.allImage.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 4),
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(0.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => WallpaperPage(
+                                  heroId: index,
+                                  allimage: alldata.allImage,
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                        child: Column(
-                          children: <Widget>[
-                            Card(
-                              elevation: 5,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              child: Container(
-                                width: MediaQuery.of(context).size.width / 2,
-                                height: 70,
-                                child: ClipRRect(
+                            );
+                          },
+                          child: Column(
+                            children: <Widget>[
+                              Card(
+                                elevation: 5,
+                                shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8.0),
-                                  child: Hero(
-                                    tag: index,
-                                    child: CachedNetworkImage(
-                                      imageUrl: constant
-                                              .SERVER_IMAGE_UPFOLDER_CATEGORY +
-                                          'Good%20Evening/' +
-                                          alldata.allImage[index].urlImage,
-                                      imageBuilder: (context, imageProvider) =>
-                                          Container(
-                                        decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                            image: imageProvider,
-                                            fit: BoxFit.cover,
+                                ),
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  height: 70,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    child: Hero(
+                                      tag: index,
+                                      child: CachedNetworkImage(
+                                        imageUrl: constant
+                                                .SERVER_IMAGE_UPFOLDER_CATEGORY +
+                                            'Good%20Evening/' +
+                                            alldata.allImage[index].urlImage,
+                                        imageBuilder:
+                                            (context, imageProvider) =>
+                                                Container(
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                              image: imageProvider,
+                                              fit: BoxFit.cover,
+                                            ),
                                           ),
                                         ),
+                                        placeholder: (context, url) =>
+                                            Image.asset(
+                                          'assets/images/loading.gif',
+                                          fit: BoxFit.cover,
+                                        ),
+                                        errorWidget: (context, url, error) =>
+                                            Icon(Icons.error),
                                       ),
-                                      placeholder: (context, url) =>
-                                          Image.asset(
-                                        'assets/images/loading.gif',
-                                        fit: BoxFit.cover,
-                                      ),
-                                      errorWidget: (context, url, error) =>
-                                          Icon(Icons.error),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ]),
+              ]),
+            ),
           ),
         ),
       ),

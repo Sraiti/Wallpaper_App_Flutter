@@ -4,10 +4,12 @@ import 'package:flutter_app/models/itemImage.dart';
 import 'package:flutter_app/screens/wallpaper.dart';
 import 'package:flutter_app/util/constant.dart';
 import 'package:flutter_app/util/sqlite.dart';
+import 'package:flutter_app/models/image.dart';
 
 class Favorites extends StatelessWidget {
   static final String id = "favorites";
   var dbhelper = DBHelper();
+  var alldata = data.getInstance();
 
   Future<List<itemImage>> getfav() async {
     var dbhepler = DBHelper();

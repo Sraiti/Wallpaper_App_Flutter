@@ -11,4 +11,5 @@ class data {
   List<itemImage> allImage = [];
 
   List<itemImage> get images => allImage;
+  List<itemImage> get allfav => allImage;
 }

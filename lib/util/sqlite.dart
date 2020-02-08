@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:flutter_app/data/dbManager.dart';
 import 'package:flutter_app/models/itemImage.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:io' as io;
 
@@ -53,12 +55,13 @@ class DBHelper {
   }
 
   void addToFavoret(itemImage image) async {
+    print(image.urlImage);
     var dbConnection = await db;
-
     String query =
         'INSERT INTO $Table_name (urlimage , isfav) VALUES(\'${image.urlImage}\',1)';
 
     await dbConnection.rawInsert(query);
+
     /* await dbConnection.transaction((transaction) async {
       return await transaction.rawInsert(query);
     });*/
