@@ -1,5 +1,7 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 bool saveImage(Map<String, dynamic> map) {
   try {
@@ -35,5 +37,37 @@ void showProgressDialog(BuildContext context, String message) {
         ),
       );
     },
+  );
+}
+
+_launchURL(url) async {
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
+
+SnackBar snackBar() {
+  String snaktext;
+  IconData snakicon;
+
+  snackBar(String snaktext, IconData snakicon) {
+    snaktext;
+    snakicon;
+  }
+
+  ;
+  return SnackBar(
+    content: Row(
+      mainAxisSize: MainAxisSize.max,
+      children: <Widget>[
+        Icon(snakicon),
+        SizedBox(
+          width: 12.0,
+        ),
+        Text(snaktext),
+      ],
+    ),
   );
 }

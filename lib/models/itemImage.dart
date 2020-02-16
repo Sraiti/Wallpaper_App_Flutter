@@ -1,5 +1,4 @@
 class itemImage {
-
   static itemImage current;
 
   int Id;

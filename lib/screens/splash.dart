@@ -1,15 +1,12 @@
 import 'dart:convert';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/data/dbManager.dart';
 import 'package:flutter_app/models/image.dart';
 import 'package:flutter_app/models/itemImage.dart';
 import 'package:flutter_app/screens/home_page.dart';
 import 'package:flutter_app/util/constant.dart';
 import 'package:flutter_app/util/sqlite.dart';
 import 'package:http/http.dart';
-import 'package:provider/provider.dart';
 
 class splash extends StatelessWidget {
   var alldata = data.getInstance();
@@ -100,10 +97,10 @@ class splashBody extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8.0),
                   child: FadeInImage(
                     image: AssetImage(
-                      'assets/loading.gif',
+                      'assets/loading.png',
                     ),
                     fit: BoxFit.cover,
-                    placeholder: AssetImage('assets/images/loading3.gif'),
+                    placeholder: AssetImage('assets/images/loading.png'),
                   ),
                 ),
               ),
