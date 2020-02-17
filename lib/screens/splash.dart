@@ -106,7 +106,7 @@ class splashBody extends StatelessWidget {
               ),
             ),
             Text(
-              "Good Morning",
+              "Bom Dia",
               style: TextStyle(
                 color: Colors.black,
                 fontFamily: 'Caveat',

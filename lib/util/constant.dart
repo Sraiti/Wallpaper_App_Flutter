@@ -68,7 +68,7 @@ class constant {
 
   //this url is used to get latest 15 image in 1st tab.here 15 indicate that display latest 15 image if you want change to another then do.
   static final String LATEST_URL =
-      "http://dev3pro.com/brazildomdia/api.php?latest=100";
+      "http://dev3pro.com/brazildomdia/api.php?latest=1000";
 
   //this url gives list of category in 2nd tab
   static final String CATEGORY_URL = "http://dev3pro.com/brazildomdia/api.php";
