@@ -59,39 +59,35 @@ class WallpaperPage extends StatelessWidget {
                             colors: [Colors.deepPurple, Colors.blue]),
                       ),
                     ),
-                    itemIndex != 4
-                        ? Container(
-                            margin: EdgeInsets.symmetric(horizontal: 0.0),
-                            child: Hero(
-                              tag: heroId,
-                              child: CachedNetworkImage(
-                                width: MediaQuery.of(context).size.width,
-                                height: double.infinity,
-                                imageUrl:
-                                    constant.SERVER_IMAGE_UPFOLDER_CATEGORY +
-                                        'bom-dia/' +
-                                        allimage[itemIndex].urlImage,
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: imageProvider,
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                ),
-                                placeholder: (context, url) => Image.asset(
-                                  'assets/images/loading.png',
-                                  fit: BoxFit.cover,
-                                ),
-                                errorWidget: (context, url, error) => Icon(
-                                  Icons.error,
-                                  color: Colors.white,
-                                ),
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 0.0),
+                      child: Hero(
+                        tag: heroId,
+                        child: CachedNetworkImage(
+                          width: MediaQuery.of(context).size.width,
+                          height: double.infinity,
+                          imageUrl: constant.SERVER_IMAGE_UPFOLDER_CATEGORY +
+                              'bom-dia/' +
+                              allimage[itemIndex].urlImage,
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.contain,
                               ),
                             ),
-                          )
-                        : NativeAd(),
+                          ),
+                          placeholder: (context, url) => Image.asset(
+                            'assets/images/loading.png',
+                            fit: BoxFit.cover,
+                          ),
+                          errorWidget: (context, url, error) => Icon(
+                            Icons.error,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),

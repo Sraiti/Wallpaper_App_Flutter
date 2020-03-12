@@ -48,13 +48,13 @@ const String resizeImage = 'resizeImage';
 
 class constant {
   // banner
-  static final String banner = "422795005331940_422800488664725";
+  static final String banner = "444226412900223_444414129548118";
   // interstitial
-  static final String Interstitial = "422795005331940_422800488664725";
+  static final String Interstitial = "444226412900223_444413449548186";
   // native
-  static final String Native = "YOUR_PLACEMENT_ID";
+  static final String Native = "444226412900223_444227996233398";
   //banner Native
-  static final String BannerNative = "YOUR_PLACEMENT_ID";
+  static final String BannerNative = "444226412900223_522173195105544";
 
   // counter for Show Inyterstitial
   static int count = 0;

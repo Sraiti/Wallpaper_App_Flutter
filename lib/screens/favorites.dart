@@ -62,7 +62,7 @@ class GridViewFavorites extends StatelessWidget {
     return Column(
       children: <Widget>[
         allfav.length != 0
-            ? Container(
+            ? Expanded(
                 child: GridView.builder(
                   shrinkWrap: true,
                   physics: BouncingScrollPhysics(),
@@ -134,7 +134,7 @@ class GridViewFavorites extends StatelessWidget {
               ),
         Container(
           child: FacebookNativeAd(
-            placementId: "YOUR_PLACEMENT_ID",
+            placementId: constant.BannerNative,
             adType: NativeAdType.NATIVE_BANNER_AD,
             bannerAdSize: NativeBannerAdSize.HEIGHT_100,
             width: double.infinity,

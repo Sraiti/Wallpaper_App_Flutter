@@ -75,7 +75,7 @@ class _facebookadState extends State<facebookadBanner> {
     setState(() {
       print("initstate");
       FacebookAudienceNetwork.init(
-        testingId: "e6d67e88-aced-4e6f-b392-79d9d6e9b676",
+        testingId: "b290e21d-8983-439e-8ad6-026346f183e8",
       );
     });
   }
@@ -86,7 +86,7 @@ class _facebookadState extends State<facebookadBanner> {
     return Column(
       children: <Widget>[
         FacebookBannerAd(
-          placementId: "YOUR_PLACEMENT_ID",
+          placementId: constant.banner,
           bannerSize: BannerSize.STANDARD,
           listener: (result, value) {
             switch (result) {
@@ -159,7 +159,7 @@ class _NativeBannerState extends State<NativeBanner> {
   @override
   Widget build(BuildContext context) {
     adsNativeBanner = FacebookNativeAd(
-      placementId: "YOUR_PLACEMENT_ID",
+      placementId: constant.BannerNative,
       adType: NativeAdType.NATIVE_BANNER_AD,
       bannerAdSize: NativeBannerAdSize.HEIGHT_50,
       width: double.infinity,
