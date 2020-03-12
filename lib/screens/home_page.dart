@@ -25,8 +25,7 @@ class homepage extends StatelessWidget {
     FacebookInterstitialAd.loadInterstitialAd(
       placementId: constant.Interstitial,
       listener: (result, value) {
-        if (result == InterstitialAdResult.LOADED)
-          FacebookInterstitialAd.showInterstitialAd(delay: 5000);
+        if (result == InterstitialAdResult.LOADED) isload = true;
       },
     );
 
@@ -155,8 +154,6 @@ class _LatestState extends State<Latest> {
         _scrollController.position.maxScrollExtent)
       setState(() {
         length += 5;
-
-        print(length);
       });
   }
 
@@ -194,13 +191,17 @@ class _LatestState extends State<Latest> {
                     padding: const EdgeInsets.all(0.0),
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => WallpaperPage(
-                                heroId: index, allimage: alldata.allfav),
-                          ),
-                        );
+                        constant.count++;
+                        constant.count % 7 == 0
+                            ? FacebookInterstitialAd.showInterstitialAd(
+                                delay: 0)
+                            : Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => WallpaperPage(
+                                      heroId: index, allimage: alldata.allfav),
+                                ),
+                              );
                       },
                       child: Column(
                         children: <Widget>[
