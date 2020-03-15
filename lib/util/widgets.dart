@@ -73,9 +73,6 @@ class _facebookadState extends State<facebookadBanner> {
 
     setState(() {
       print("initstate");
-      FacebookAudienceNetwork.init(
-        testingId: "b290e21d-8983-439e-8ad6-026346f183e8",
-      );
     });
   }
 
@@ -113,10 +110,9 @@ class _facebookadState extends State<facebookadBanner> {
 }
 
 class NativeAd extends StatelessWidget {
-  FacebookNativeAd _nativeAd;
+  Widget _nativeAd;
 
   FacebookNativeAd _loadad() {
-    print("loadad");
     FacebookNativeAd native = FacebookNativeAd(
       placementId: constant.Native,
       adType: NativeAdType.NATIVE_AD,

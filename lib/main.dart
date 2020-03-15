@@ -1,8 +1,11 @@
+import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/data/dbManager.dart';
 import 'package:flutter_app/screens/home_page.dart';
 import 'package:flutter_app/screens/splash.dart';
 import 'package:flutter_app/screens/wallpaper.dart';
+import 'package:flutter_app/util/constant.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 
 void main() => runApp(MyApp());
@@ -12,6 +15,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FacebookAudienceNetwork.init(
+      testingId: "3c2a1ff6-8aa7-4463-b614-a39443162649",
+    );
+    OneSignal.shared.init(constant.onesignal_app_id, iOSSettings: {
+      OSiOSSettings.autoPrompt: false,
+      OSiOSSettings.inAppLaunchUrl: true
+    });
+    OneSignal.shared
+        .setInFocusDisplayType(OSNotificationDisplayType.notification);
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
