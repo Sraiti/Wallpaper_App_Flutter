@@ -2,7 +2,6 @@ import 'package:facebook_audience_network/ad/ad_banner.dart';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/util/constant.dart';
-import 'package:toast/toast.dart';
 
 class ShowMore extends StatelessWidget {
   final String text;

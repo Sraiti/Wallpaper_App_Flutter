@@ -70,6 +70,7 @@ class GridViewFavorites extends StatelessWidget {
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 4),
                   itemBuilder: (context, index) {
+                    var alldata = data.getInstance();
                     return Padding(
                       padding: const EdgeInsets.all(0.0),
                       child: GestureDetector(
@@ -99,7 +100,8 @@ class GridViewFavorites extends StatelessWidget {
                                     child: CachedNetworkImage(
                                       imageUrl: constant
                                               .SERVER_IMAGE_UPFOLDER_CATEGORY +
-                                          'bom-dia/' +
+                                          alldata.allcats[1].name +
+                                          '/' +
                                           allfav[index].urlImage,
                                       imageBuilder: (context, imageProvider) =>
                                           Container(

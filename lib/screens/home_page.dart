@@ -1,10 +1,7 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/data/dbManager.dart';
 import 'package:flutter_app/models/image.dart';
 import 'package:flutter_app/models/itemImage.dart';
 import 'package:flutter_app/screens/wallpaper.dart';
@@ -12,6 +9,7 @@ import 'package:flutter_app/util/constant.dart';
 import 'package:flutter_app/util/sqlite.dart';
 import 'package:flutter_app/util/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import 'favorites.dart';
 
 class homepage extends StatelessWidget {
@@ -67,7 +65,7 @@ class homepage extends StatelessWidget {
               ),
               FlatButton.icon(
                 onPressed: () async {
-                  const url = 'https://flutter.dev';
+                  String url = constant.prefixstore + constant.package;
                   if (await canLaunch(url)) {
                     await launch(url);
                   } else {
@@ -145,6 +143,7 @@ class _LatestState extends State<Latest> {
   int length = 37;
   bool isload = true;
   var alldata = data.getInstance();
+
   _scrollListener() {
     if (alldata.allImage.length < length) {
       length = alldata.allImage.length;
@@ -176,7 +175,6 @@ class _LatestState extends State<Latest> {
   Widget build(BuildContext context) {
     return Container(
       //height: MediaQuery.of(context).size.height,
-
       child: Expanded(
         child: alldata.allImage.length != 0
             ? GridView.builder(
@@ -220,7 +218,8 @@ class _LatestState extends State<Latest> {
                                   child: CachedNetworkImage(
                                     imageUrl: constant
                                             .SERVER_IMAGE_UPFOLDER_CATEGORY +
-                                        'bom-dia/' +
+                                        alldata.allcats[1].name +
+                                        '/' +
                                         alldata.allImage[index].urlImage,
                                     imageBuilder: (context, imageProvider) =>
                                         Container(
@@ -280,6 +279,7 @@ class favoriteSlider extends StatelessWidget {
                     itemBuilder: (BuildContext context, int itemIndex) {
                       return Builder(
                         builder: (BuildContext context) {
+                          var alldata = data.getInstance();
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Stack(
@@ -308,7 +308,8 @@ class favoriteSlider extends StatelessWidget {
                                         child: CachedNetworkImage(
                                           imageUrl: constant
                                                   .SERVER_IMAGE_UPFOLDER_CATEGORY +
-                                              'bom-dia/' +
+                                              alldata.allcats[1].name +
+                                              '/' +
                                               snapshot.data[itemIndex].urlImage,
                                           imageBuilder:
                                               (context, imageProvider) =>

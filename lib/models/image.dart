@@ -1,3 +1,4 @@
+import 'package:flutter_app/models/cat.dart';
 import 'package:flutter_app/models/itemImage.dart';
 
 class data {
@@ -10,8 +11,11 @@ class data {
 
   List allfavorites = [];
   List<itemImage> allImage = [];
+  List<catItem> allcats = [];
 
   List<itemImage> get images => allImage;
 
   List<itemImage> get allfav => allImage;
+
+  List<catItem> get cats => allcats;
 }

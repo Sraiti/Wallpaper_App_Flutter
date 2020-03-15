@@ -47,35 +47,43 @@ const String shareImageToFacebook = 'shareImageToFacebook';
 const String resizeImage = 'resizeImage';
 
 class constant {
+  //My package name
+  static final String package = "com.wallchina.goodevening";
+
   // banner
-  static final String banner = "444226412900223_444414129548118";
+  static final String banner = "230361571428329_230365004761319";
+
   // interstitial
-  static final String Interstitial = "444226412900223_444413449548186";
+  static final String Interstitial = "230361571428329_230364461428040";
+
   // native
-  static final String Native = "444226412900223_444227996233398";
+  static final String Native = "230361571428329_230362724761547";
+
   //banner Native
-  static final String BannerNative = "444226412900223_522173195105544";
+  static final String BannerNative = "230361571428329_232607371203749";
 
   // counter for Show Inyterstitial
   static int count = 0;
+
   //this is the path of uploaded image of server where image store
   static final String SERVER_IMAGE_UPFOLDER_CATEGORY =
-      "http://dev3pro.com/brazildomdia/categories/";
+      "http://dev3pro.com/WallpaperApp00/categories/";
 
   //this is the path of uploaded image of server where image store
   static final String SERVER_IMAGE_UPFOLDER_THUMB =
-      "http://dev3pro.com/brazildomdia/images/thumbs/";
+      "http://dev3pro.com/WallpaperApp00/images/thumbs/";
 
   //this url is used to get latest 15 image in 1st tab.here 15 indicate that display latest 15 image if you want change to another then do.
   static final String LATEST_URL =
-      "http://dev3pro.com/brazildomdia/api.php?latest=1000";
+      "http://dev3pro.com/WallpaperApp00/api.php?latest=1000";
 
   //this url gives list of category in 2nd tab
-  static final String CATEGORY_URL = "http://dev3pro.com/brazildomdia/api.php";
+  static final String CATEGORY_URL =
+      "http://dev3pro.com/WallpaperApp00/api.php";
 
   //this url gives item of specific category.
   static final String CATEGORY_ITEM_URL =
-      "http://dev3pro.com/brazildomdia/api.php?cat_id=";
+      "http://dev3pro.com/WallpaperApp00/api.php?cat_id=";
 
   static final String LATEST_ARRAY_NAME = "HDwallpaper";
   static final String LATEST_IMAGE_CATEGORY_NAME = "category_name";
@@ -93,4 +101,5 @@ class constant {
   static final String CATEGORY_ITEM_ARRAY = "HDwallpaper";
   static final String CATEGORY_ITEM_CATNAME = "cat_name";
   static final String CATEGORY_ITEM_IMAGEURL = "images";
+  static String prefixstore = 'https://play.google.com/store/apps/details?id=';
 }

@@ -7,19 +7,11 @@ import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_app/data/dbManager.dart';
 import 'package:flutter_app/models/image.dart';
 import 'package:flutter_app/models/itemImage.dart';
 import 'package:flutter_app/util/constant.dart';
-import 'package:flutter_app/util/util.dart';
-import 'package:http/http.dart' as http;
 import 'package:image_downloader/image_downloader.dart';
-import 'package:path/path.dart' as path;
-import 'package:path_provider/path_provider.dart';
-import 'package:pedantic/pedantic.dart';
-import 'package:flutter_app/util/widgets.dart';
-
 import 'package:provider/provider.dart';
 
 allImage alldatanotif;
@@ -37,6 +29,7 @@ class WallpaperPage extends StatelessWidget {
     Provider.of<allImage>(context, listen: false).changeimage(allimage[heroId]);
     return Scaffold(
       body: Consumer<allImage>(builder: (context, temp, child) {
+        var alldata = data.getInstance();
         return SafeArea(
           child: Stack(
             children: <Widget>[
@@ -67,7 +60,8 @@ class WallpaperPage extends StatelessWidget {
                           width: MediaQuery.of(context).size.width,
                           height: double.infinity,
                           imageUrl: constant.SERVER_IMAGE_UPFOLDER_CATEGORY +
-                              'bom-dia/' +
+                              alldata.allcats[1].name +
+                              '/' +
                               allimage[itemIndex].urlImage,
                           imageBuilder: (context, imageProvider) => Container(
                             decoration: BoxDecoration(
@@ -212,7 +206,9 @@ class WallpaperPage extends StatelessWidget {
                                       response);
                               await Share.file(
                                   'ESYS AMLOG', 'amlog.jpg', bytes, 'image/jpg',
-                                  text: 'this my text');
+                                  text: 'More Photos => ' +
+                                      constant.prefixstore +
+                                      constant.package);
                               print("done");
                             }),
                       )

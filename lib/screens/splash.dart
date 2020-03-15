@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_app/models/cat.dart';
 import 'package:flutter_app/models/image.dart';
 import 'package:flutter_app/models/itemImage.dart';
 import 'package:flutter_app/screens/home_page.dart';
@@ -18,12 +19,21 @@ class splash extends StatelessWidget {
     Response response = await get(constant.LATEST_URL);
     Map _data = jsonDecode(response.body);
     Response responseCat = await get(constant.CATEGORY_URL);
-    Map _categorys = jsonDecode(response.body);
+    Map _categorys = jsonDecode(responseCat.body);
 
-    for (var word in _data['HDwallpaper']) {
+    for (var catJson in _categorys['HDwallpaper']) {
+      catItem cat = new catItem();
+      cat.id = 0;
+      cat.name = catJson['category_name'].toString().replaceAll(' ', '%20');
+      cat.imageUrl = catJson['category_image'].toString();
+      print(cat.name);
+
+      alldata.allcats.add(cat);
+    }
+    for (var imageItem in _data['HDwallpaper']) {
       itemImage image = new itemImage();
       image.Id = 0;
-      image.urlImage = word['image'].toString();
+      image.urlImage = imageItem['image'].toString();
       image.isfav = 0;
       alldata.allImage.add(image);
     }
@@ -106,7 +116,7 @@ class splashBody extends StatelessWidget {
               ),
             ),
             Text(
-              "Bom Dia",
+              "晚上好",
               style: TextStyle(
                 color: Colors.black,
                 fontFamily: 'Caveat',
