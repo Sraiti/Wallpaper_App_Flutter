@@ -47,6 +47,9 @@ const String shareImageToFacebook = 'shareImageToFacebook';
 const String resizeImage = 'resizeImage';
 
 class constant {
+  // name
+  static final String nameApp = "Bom dia";
+
   //My package name
   static final String package = "com.wallbrazil.goodmorning";
 

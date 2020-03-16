@@ -116,7 +116,7 @@ class splashBody extends StatelessWidget {
               ),
             ),
             Text(
-              "晚上好",
+              constant.nameApp,
               style: TextStyle(
                 color: Colors.black,
                 fontFamily: 'Caveat',
