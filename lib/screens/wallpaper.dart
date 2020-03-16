@@ -60,7 +60,7 @@ class WallpaperPage extends StatelessWidget {
                           width: MediaQuery.of(context).size.width,
                           height: double.infinity,
                           imageUrl: constant.SERVER_IMAGE_UPFOLDER_CATEGORY +
-                              alldata.allcats[1].name +
+                              alldata.allcats[0].name +
                               '/' +
                               allimage[itemIndex].urlImage,
                           imageBuilder: (context, imageProvider) => Container(

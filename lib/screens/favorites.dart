@@ -100,7 +100,7 @@ class GridViewFavorites extends StatelessWidget {
                                     child: CachedNetworkImage(
                                       imageUrl: constant
                                               .SERVER_IMAGE_UPFOLDER_CATEGORY +
-                                          alldata.allcats[1].name +
+                                          alldata.allcats[0].name +
                                           '/' +
                                           allfav[index].urlImage,
                                       imageBuilder: (context, imageProvider) =>

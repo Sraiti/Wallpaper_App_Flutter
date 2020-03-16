@@ -150,7 +150,7 @@ class _LatestState extends State<Latest> {
 
       return;
     }
-    print(_scrollController.position.pixels);
+
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent)
       setState(() {
@@ -220,7 +220,7 @@ class _LatestState extends State<Latest> {
                                   child: CachedNetworkImage(
                                     imageUrl: constant
                                             .SERVER_IMAGE_UPFOLDER_CATEGORY +
-                                        alldata.allcats[1].name +
+                                        alldata.allcats[0].name +
                                         '/' +
                                         alldata.allImage[index].urlImage,
                                     imageBuilder: (context, imageProvider) =>
@@ -310,7 +310,7 @@ class favoriteSlider extends StatelessWidget {
                                         child: CachedNetworkImage(
                                           imageUrl: constant
                                                   .SERVER_IMAGE_UPFOLDER_CATEGORY +
-                                              alldata.allcats[1].name +
+                                              alldata.allcats[0].name +
                                               '/' +
                                               snapshot.data[itemIndex].urlImage,
                                           imageBuilder:
