@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     FacebookAudienceNetwork.init(
-      testingId: "3c2a1ff6-8aa7-4463-b614-a39443162649",
+      testingId: "7a5e22d0-9161-43dc-bf61-ac9af0c6b11f",
     );
     OneSignal.shared.init(constant.onesignal_app_id, iOSSettings: {
       OSiOSSettings.autoPrompt: false,

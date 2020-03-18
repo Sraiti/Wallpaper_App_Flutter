@@ -2,6 +2,8 @@ import 'package:facebook_audience_network/ad/ad_banner.dart';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/util/constant.dart';
+import 'package:path/path.dart';
+import 'package:toast/toast.dart';
 
 class ShowMore extends StatelessWidget {
   final String text;
@@ -109,8 +111,15 @@ class _facebookadState extends State<facebookadBanner> {
   }
 }
 
-class NativeAd extends StatelessWidget {
-  Widget _nativeAd;
+class NativeAd extends StatefulWidget {
+  @override
+  _NativeAdState createState() => _NativeAdState();
+}
+
+class _NativeAdState extends State<NativeAd> {
+  Widget _nativeAd = Image.asset("assets/images/loading_book.gif");
+
+  FacebookNativeAd FbNative;
 
   FacebookNativeAd _loadad() {
     FacebookNativeAd native = FacebookNativeAd(
@@ -126,6 +135,38 @@ class NativeAd extends StatelessWidget {
       buttonBorderColor: Colors.white,
       listener: (result, value) {
         print("Native Ad: $result --> $value");
+
+        switch (result) {
+          case NativeAdResult.ERROR:
+            // TODO: Handle this case.
+            setState(() {
+              _nativeAd = Center(
+                child: Text(
+                  "No ad To Show",
+                  style: TextStyle(
+                    fontSize: 17.0,
+                  ),
+                ),
+              );
+            });
+
+            break;
+          case NativeAdResult.LOADED:
+            // TODO: Handle this case.
+
+            break;
+          case NativeAdResult.CLICKED:
+            // TODO: Handle this case.
+            break;
+          case NativeAdResult.LOGGING_IMPRESSION:
+            setState(() {
+              _nativeAd = Text("loading");
+            });
+            break;
+          case NativeAdResult.MEDIA_DOWNLOADED:
+            print("==>NativeAdResult.loading");
+            break;
+        }
       },
     );
 
@@ -134,9 +175,11 @@ class NativeAd extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _nativeAd = _loadad();
+    //_nativeAd = ;
 
-    return _nativeAd;
+    return Stack(
+      children: <Widget>[_nativeAd, _loadad()],
+    );
   }
 }
 

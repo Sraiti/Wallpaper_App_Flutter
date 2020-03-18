@@ -42,7 +42,7 @@ class homepage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          NativeAd(),
+          Expanded(child: NativeAd()),
           Text(
             "Are You Sure You Want To Quit ?",
             style: TextStyle(
