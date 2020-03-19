@@ -1,4 +1,4 @@
-package com.wallbrazil.goodmorning
+package com.wallchina.flowers
 
 import androidx.annotation.NonNull
 import io.flutter.embedding.android.FlutterActivity
