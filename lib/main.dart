@@ -18,10 +18,7 @@ class MyApp extends StatelessWidget {
     FacebookAudienceNetwork.init(
       testingId: "7a5e22d0-9161-43dc-bf61-ac9af0c6b11f",
     );
-    OneSignal.shared.init(constant.onesignal_app_id, iOSSettings: {
-      OSiOSSettings.autoPrompt: false,
-      OSiOSSettings.inAppLaunchUrl: true
-    });
+
     OneSignal.shared
         .setInFocusDisplayType(OSNotificationDisplayType.notification);
     return MultiProvider(

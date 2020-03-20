@@ -151,10 +151,10 @@ class _LatestState extends State<Latest> {
       return;
     }
 
-    if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent)
+    if (_scrollController.position.pixels >
+        _scrollController.position.maxScrollExtent - 200)
       setState(() {
-        length += 5;
+        length += 30;
       });
   }
 
@@ -272,79 +272,90 @@ class favoriteSlider extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           List<itemImage> images = snapshot.data ?? [];
           return Container(
-            child: images.length != 0
-                ? CarouselSlider.builder(
-                    itemCount: images.length,
-                    viewportFraction: 0.3,
-                    autoPlay: true,
-                    height: 100.0,
-                    itemBuilder: (BuildContext context, int itemIndex) {
-                      return Builder(
-                        builder: (BuildContext context) {
-                          var alldata = data.getInstance();
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Stack(
-                              children: <Widget>[
-                                Card(
-                                  elevation: 5,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => WallpaperPage(
-                                              heroId: itemIndex,
-                                              allimage: images),
-                                        ),
-                                      );
-                                    },
-                                    child: Container(
-                                      height: 100,
-                                      child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                        child: CachedNetworkImage(
-                                          imageUrl: constant
-                                                  .SERVER_IMAGE_UPFOLDER_CATEGORY +
-                                              alldata.allcats[0].name +
-                                              '/' +
-                                              snapshot.data[itemIndex].urlImage,
-                                          imageBuilder:
-                                              (context, imageProvider) =>
-                                                  Container(
-                                            decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                image: imageProvider,
-                                                fit: BoxFit.cover,
+              child: images.length != 0
+                  ? CarouselSlider.builder(
+                      itemCount: images.length,
+                      viewportFraction: 0.3,
+                      autoPlay: true,
+                      height: 100.0,
+                      itemBuilder: (BuildContext context, int itemIndex) {
+                        return Builder(
+                          builder: (BuildContext context) {
+                            var alldata = data.getInstance();
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Stack(
+                                children: <Widget>[
+                                  Card(
+                                    elevation: 5,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => WallpaperPage(
+                                                heroId: itemIndex,
+                                                allimage: images),
+                                          ),
+                                        );
+                                      },
+                                      child: Container(
+                                        height: 100,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                          child: CachedNetworkImage(
+                                            imageUrl: constant
+                                                    .SERVER_IMAGE_UPFOLDER_CATEGORY +
+                                                alldata.allcats[0].name +
+                                                '/' +
+                                                snapshot
+                                                    .data[itemIndex].urlImage,
+                                            imageBuilder:
+                                                (context, imageProvider) =>
+                                                    Container(
+                                              decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                  image: imageProvider,
+                                                  fit: BoxFit.cover,
+                                                ),
                                               ),
                                             ),
+                                            placeholder: (context, url) =>
+                                                Image.asset(
+                                              'assets/images/loading.png',
+                                              fit: BoxFit.cover,
+                                            ),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    Icon(Icons.error),
                                           ),
-                                          placeholder: (context, url) =>
-                                              Image.asset(
-                                            'assets/images/loading.png',
-                                            fit: BoxFit.cover,
-                                          ),
-                                          errorWidget: (context, url, error) =>
-                                              Icon(Icons.error),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      );
-                    })
-                : Container(
-                    child: Text("Empty"),
-                  ),
-          );
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      })
+                  : Container(
+                      width: 100.0,
+                      height: 100.0,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.max,
+                        children: <Widget>[
+                          Image(
+                            image: AssetImage('assets/images/icon_empty2.png'),
+                          ),
+                        ],
+                      ),
+                    ));
         } else
           return Center(
             child: Container(

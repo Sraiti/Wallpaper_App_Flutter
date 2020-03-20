@@ -151,7 +151,8 @@ class WallpaperPage extends StatelessWidget {
                                       onPressed: () async {
                                         await ImageDownloader.downloadImage(
                                           constant.SERVER_IMAGE_UPFOLDER_CATEGORY +
-                                              'bom-dia/' +
+                                              alldata.allcats[0].name +
+                                              '/' +
                                               temp.image.urlImage,
                                           destination: AndroidDestinationType
                                               .directoryDownloads
@@ -198,7 +199,8 @@ class WallpaperPage extends StatelessWidget {
 
                               var request = await HttpClient().getUrl(Uri.parse(
                                   constant.SERVER_IMAGE_UPFOLDER_CATEGORY +
-                                      'bom-dia/' +
+                                      alldata.allcats[0].name +
+                                      '/' +
                                       temp.image.urlImage));
                               var response = await request.close();
                               Uint8List bytes =

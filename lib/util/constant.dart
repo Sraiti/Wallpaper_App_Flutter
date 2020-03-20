@@ -66,7 +66,7 @@ class constant {
   static final String BannerNative = "586726395384656_586729742050988";
 
   //onesignal Id
-  static final String onesignal_app_id = "93a9b681-97bd-4fa8-af4c-c0f152cfeffa";
+  //static final String onesignal_app_id = "93a9b681-97bd-4fa8-af4c-c0f152cfeffa";
 
   // counter for Show Inyterstitial
   static int count = 0;

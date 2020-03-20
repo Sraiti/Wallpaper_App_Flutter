@@ -131,8 +131,14 @@ class GridViewFavorites extends StatelessWidget {
                   },
                 ),
               )
-            : Container(
-                child: Text("Empty"),
+            : Expanded(
+                child: Container(
+                  width: 100.0,
+                  height: 100.0,
+                  child: Image(
+                    image: AssetImage('assets/images/icon_empty2.png'),
+                  ),
+                ),
               ),
         Container(
           child: FacebookNativeAd(
