@@ -1,8 +1,8 @@
 class itemImage {
   static itemImage current;
 
-  int Id;
   String urlImage;
+  String CatName;
   int isfav;
 
   itemImage();

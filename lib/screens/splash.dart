@@ -27,14 +27,13 @@ class splash extends StatelessWidget {
       cat.name = catJson['category_name'].toString().replaceAll(' ', '%20');
       cat.imageUrl = catJson['category_image'].toString();
       print(cat.name);
-
       alldata.allcats.add(cat);
     }
     for (var imageItem in _data['HDwallpaper']) {
       itemImage image = new itemImage();
-      image.Id = 0;
       image.urlImage = imageItem['image'].toString();
       image.isfav = 0;
+      image.CatName = imageItem['category_name'].toString();
       alldata.allImage.add(image);
     }
   }

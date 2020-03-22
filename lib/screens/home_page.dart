@@ -199,7 +199,8 @@ class _LatestState extends State<Latest> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => WallpaperPage(
-                                      heroId: index, allimage: alldata.allfav),
+                                      heroId: index,
+                                      allimage: alldata.allImage),
                                 ),
                               );
                       },
@@ -220,7 +221,8 @@ class _LatestState extends State<Latest> {
                                   child: CachedNetworkImage(
                                     imageUrl: constant
                                             .SERVER_IMAGE_UPFOLDER_CATEGORY +
-                                        alldata.allcats[0].name +
+                                        alldata.allImage[index].CatName
+                                            .replaceAll(' ', '%20') +
                                         '/' +
                                         alldata.allImage[index].urlImage,
                                     imageBuilder: (context, imageProvider) =>

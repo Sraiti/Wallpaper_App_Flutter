@@ -11,8 +11,10 @@ import 'package:flutter_app/data/dbManager.dart';
 import 'package:flutter_app/models/image.dart';
 import 'package:flutter_app/models/itemImage.dart';
 import 'package:flutter_app/util/constant.dart';
+import 'package:flutter_app/util/widgets.dart';
 import 'package:image_downloader/image_downloader.dart';
 import 'package:provider/provider.dart';
+import 'package:toast/toast.dart';
 
 allImage alldatanotif;
 
@@ -24,6 +26,51 @@ class WallpaperPage extends StatelessWidget {
   final List<itemImage> allimage;
 
   //var alldata = data.getInstance();
+
+  //bottom sheet
+  Widget buildBottomSheet(BuildContext) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            stops: [0.2, 1],
+            colors: [Colors.orange, Colors.pink]),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          Expanded(child: NativeAd()),
+          Text(
+            "Share Image with Your Friends",
+            style: TextStyle(
+              fontSize: 16.0,
+              fontFamily: 'good2',
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              FlatButton.icon(
+                onPressed: () {
+                  Navigator.pop(BuildContext, true);
+                },
+                label: Text(
+                  'Share',
+                ),
+                icon: Icon(Icons.share),
+                color: Colors.black12,
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Future<bool> _onsharePressed(context) {
+    return showModalBottomSheet(context: context, builder: buildBottomSheet);
+  }
 
   Widget myBody(BuildContext context) {
     Provider.of<allImage>(context, listen: false).changeimage(allimage[heroId]);
@@ -60,7 +107,9 @@ class WallpaperPage extends StatelessWidget {
                           width: MediaQuery.of(context).size.width,
                           height: double.infinity,
                           imageUrl: constant.SERVER_IMAGE_UPFOLDER_CATEGORY +
-                              alldata.allcats[0].name +
+                              allimage[itemIndex]
+                                  .CatName
+                                  .replaceAll(' ', '%20') +
                               '/' +
                               allimage[itemIndex].urlImage,
                           imageBuilder: (context, imageProvider) => Container(
@@ -120,10 +169,17 @@ class WallpaperPage extends StatelessWidget {
                           width: double.infinity,
                           // height: MediaQuery.of(context).size.height - 200,
                           decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(16.0),
-                                  topRight: Radius.circular(16.0))),
+                            gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                stops: [0.2, 1],
+                                colors: [Colors.orange, Colors.pink]),
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(16.0),
+                              topRight: Radius.circular(16.0),
+                            ),
+                          ),
 
                           child: Column(
                             children: <Widget>[
@@ -133,7 +189,7 @@ class WallpaperPage extends StatelessWidget {
                                   temp.image.isfav == 1
                                       ? IconButton(
                                           icon: Icon(Icons.favorite),
-                                          color: Colors.red,
+                                          color: Colors.purple,
                                           onPressed: () {
                                             temp.deletefav();
                                             temp.setfav(0);
@@ -151,7 +207,7 @@ class WallpaperPage extends StatelessWidget {
                                       onPressed: () async {
                                         await ImageDownloader.downloadImage(
                                           constant.SERVER_IMAGE_UPFOLDER_CATEGORY +
-                                              alldata.allcats[0].name +
+                                              temp.image.CatName +
                                               '/' +
                                               temp.image.urlImage,
                                           destination: AndroidDestinationType
@@ -182,6 +238,8 @@ class WallpaperPage extends StatelessWidget {
                               color: Colors.black,
                             ),
                             onPressed: () async {
+                              var res = await _onsharePressed(context);
+                              print(res);
                               Scaffold.of(context).showSnackBar(
                                 SnackBar(
                                   content: Row(
@@ -196,10 +254,9 @@ class WallpaperPage extends StatelessWidget {
                                   ),
                                 ),
                               );
-
                               var request = await HttpClient().getUrl(Uri.parse(
                                   constant.SERVER_IMAGE_UPFOLDER_CATEGORY +
-                                      alldata.allcats[0].name +
+                                      temp.image.CatName +
                                       '/' +
                                       temp.image.urlImage));
                               var response = await request.close();

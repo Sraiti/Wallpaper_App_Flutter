@@ -31,7 +31,7 @@ class DBHelper {
 
   void oncreatDb(Database db, int version) async {
     await db.execute(
-        'CREATE TABLE $Table_name (id INTEGER PRIMARY KEY AUTOINCREMENT , urlimage TEXT , isfav INTEGER);');
+        'CREATE TABLE $Table_name (id INTEGER PRIMARY KEY AUTOINCREMENT , urlimage TEXT , isfav INTEGER , CatName TEXT);');
   }
 
   Future<List<itemImage>> getfavorites() async {
@@ -41,8 +41,9 @@ class DBHelper {
 
     for (int i = 0; i < list.length; i++) {
       itemImage image = new itemImage();
-      image.Id = list[i]['id'];
+      //image.Id = list[i]['id'];
       image.urlImage = list[i]['urlimage'];
+      image.CatName = list[i]['CatName'];
       image.isfav = list[i]['isfav'];
       favorites.add(image);
     }
@@ -54,7 +55,7 @@ class DBHelper {
     print(image.urlImage);
     var dbConnection = await db;
     String query =
-        'INSERT INTO $Table_name (urlimage , isfav) VALUES(\'${image.urlImage}\',1)';
+        'INSERT INTO $Table_name (urlimage , isfav , CatName) VALUES(\'${image.urlImage}\',1,\'${image.CatName}\')';
 
     await dbConnection.rawInsert(query);
 
