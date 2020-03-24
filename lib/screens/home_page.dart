@@ -4,6 +4,7 @@ import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/models/image.dart';
 import 'package:flutter_app/models/itemImage.dart';
+import 'package:flutter_app/screens/splash.dart';
 import 'package:flutter_app/screens/wallpaper.dart';
 import 'package:flutter_app/util/constant.dart';
 import 'package:flutter_app/util/sqlite.dart';
@@ -251,7 +252,33 @@ class _LatestState extends State<Latest> {
                 },
               )
             : Container(
-                child: Text("Please check your Internet Network!"),
+                height: double.infinity,
+                width: double.infinity,
+                child: Center(
+                  child: Column(
+                    children: <Widget>[
+                      Text("Please check your Internet Network!"),
+                      FlatButton(
+                        color: Colors.black12,
+                        child: Text(
+                          'try again',
+                          style: TextStyle(
+                            fontSize: 12.0,
+                            fontFamily: 'good2',
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => splash(),
+                            ),
+                          );
+                        },
+                      )
+                    ],
+                  ),
+                ),
               ),
       ),
     );

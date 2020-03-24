@@ -264,7 +264,7 @@ class WallpaperPage extends StatelessWidget {
                                   await consolidateHttpClientResponseBytes(
                                       response);
                               await Share.file(
-                                  'ESYS AMLOG', 'amlog.jpg', bytes, 'image/jpg',
+                                  'ESYS AMLOG', 'amlog.gif', bytes, 'image/gif',
                                   text: 'More Photos => ' +
                                       constant.prefixstore +
                                       constant.package);
