@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/models/image.dart';
+import 'package:flutter_app/models/DataManager.dart';
 import 'package:flutter_app/models/itemImage.dart';
 import 'package:flutter_app/screens/wallpaper.dart';
 import 'package:flutter_app/util/constant.dart';
@@ -10,7 +10,7 @@ import 'package:flutter_app/util/sqlite.dart';
 class Favorites extends StatelessWidget {
   static final String id = "favorites";
   var dbhelper = DBHelper();
-  var alldata = data.getInstance();
+  var alldata = DataManager.getInstance();
 
   Future<List<itemImage>> getfav() async {
     var dbhepler = DBHelper();
@@ -22,6 +22,10 @@ class Favorites extends StatelessWidget {
   Widget build(BuildContext context) {
     var _width = MediaQuery.of(context).size.width / 2;
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.lightBlueAccent,
+        title: Text("Favorites List"),
+      ),
       body: Container(
         color: Colors.white,
         height: MediaQuery.of(context).size.height,
@@ -70,7 +74,7 @@ class GridViewFavorites extends StatelessWidget {
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 4),
                   itemBuilder: (context, index) {
-                    var alldata = data.getInstance();
+                    var alldata = DataManager.getInstance();
                     return Padding(
                       padding: const EdgeInsets.all(0.0),
                       child: GestureDetector(
@@ -100,7 +104,7 @@ class GridViewFavorites extends StatelessWidget {
                                     child: CachedNetworkImage(
                                       imageUrl: constant
                                               .SERVER_IMAGE_UPFOLDER_CATEGORY +
-                                          alldata.allcats[0].name +
+                                          allfav[index].CatName +
                                           '/' +
                                           allfav[index].urlImage,
                                       imageBuilder: (context, imageProvider) =>

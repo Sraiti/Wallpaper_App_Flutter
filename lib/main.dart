@@ -1,6 +1,7 @@
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/data/dbManager.dart';
+import 'package:flutter_app/screens/MasterScreen.dart';
 import 'package:flutter_app/screens/home_page.dart';
 import 'package:flutter_app/screens/splash.dart';
 import 'package:flutter_app/screens/wallpaper.dart';
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
           splash.id: (context) => splash(),
           homepage.id: (context) => homepage(),
           WallpaperPage.id: (context) => WallpaperPage(),
+          MasterPage.id: (context) => MasterPage(),
         },
       ),
     );

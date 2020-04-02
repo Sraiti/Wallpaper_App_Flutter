@@ -1,55 +1,47 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_app/models/DataManager.dart';
 import 'package:flutter_app/models/cat.dart';
-import 'package:flutter_app/models/image.dart';
-import 'package:flutter_app/models/itemImage.dart';
-import 'package:flutter_app/screens/home_page.dart';
+import 'package:flutter_app/screens/MasterScreen.dart';
 import 'package:flutter_app/util/constant.dart';
-import 'package:flutter_app/util/sqlite.dart';
 import 'package:http/http.dart';
 
 class splash extends StatelessWidget {
-  var alldata = data.getInstance();
+  var alldata = DataManager.getInstance();
   static final String id = "splash";
-
-  var dbhelper = DBHelper();
-
   Future<void> getData() async {
-    Response response = await get(constant.LATEST_URL);
-    Map _data = jsonDecode(response.body);
     Response responseCat = await get(constant.CATEGORY_URL);
-    Map _categorys = jsonDecode(responseCat.body);
+    Map _categories = jsonDecode(responseCat.body);
 
-    for (var catJson in _categorys['HDwallpaper']) {
-      catItem cat = new catItem();
-      cat.id = 0;
-      cat.name = catJson['category_name'].toString().replaceAll(' ', '%20');
-      cat.imageUrl = catJson['category_image'].toString();
-      print(cat.name);
-      alldata.allcats.add(cat);
-    }
-    for (var imageItem in _data['HDwallpaper']) {
-      itemImage image = new itemImage();
-      image.urlImage = imageItem['image'].toString();
-      image.isfav = 0;
-      image.CatName = imageItem['category_name'].toString();
-      alldata.allImage.add(image);
+    //TODO ADD AWAIT AND ASYNC TO THAT
+    for (var catJson in _categories['HDwallpaper']) {
+      CatItem cat = new CatItem(
+        id: int.parse(catJson['cid']),
+        imageUrl: catJson['category_image'].toString(),
+        name: catJson['category_name'].toString(),
+      );
+
+      if (!alldata.allcats.contains(cat)) {
+        alldata.allcats.add(cat);
+        print("Cat Added ${cat.name} " +
+            alldata.allcats.contains(cat).toString());
+      }
     }
   }
 
-  /* Future<void> startactivity() async {
-    print('not yet');
-    Response response = await get(constant.LATEST_URL);
-    Map _data = jsonDecode(response.body);
-    print('finish');
-
-    for (var word in _data['HDwallpaper']) {
-      alldata.allImage.add(word['image'].toString());
-    }
-
-    return runApp(homepage());
-  }*/
+//  /* Future<void> startactivity() async {
+//    print('not yet');
+//    Response response = await get(constant.LATEST_URL);
+//    Map _data = jsonDecode(response.body);
+//    print('finish');
+//
+//    for (var word in _data['HDwallpaper']) {
+//      alldata.allImage.add(word['image'].toString());
+//    }
+//
+//    return runApp(homepage());
+//  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +51,7 @@ class splash extends StatelessWidget {
         future: getData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done)
-            return homepage();
+            return MasterPage();
           else
             return splashBody();
         },
@@ -67,12 +59,17 @@ class splash extends StatelessWidget {
     );
   }
 
-  void navigate(context) async {
-    await Future.delayed(
-        const Duration(seconds: 8),
-        () => Navigator.push(
-            context, MaterialPageRoute(builder: (context) => homepage())));
-  }
+//  void navigate(context) async {
+//    await Future.delayed(
+//      const Duration(seconds: 8),
+//      () => Navigator.push(
+//        context,
+//        MaterialPageRoute(
+//          builder: (context) => homepage(),
+//        ),
+//      ),
+//    );
+//  }
 }
 
 class splashBody extends StatelessWidget {
@@ -106,7 +103,7 @@ class splashBody extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8.0),
                   child: FadeInImage(
                     image: AssetImage(
-                      'assets/loading.png',
+                      'assets/images/logo.png',
                     ),
                     fit: BoxFit.cover,
                     placeholder: AssetImage('assets/images/loading.png'),

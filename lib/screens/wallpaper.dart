@@ -8,13 +8,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/data/dbManager.dart';
-import 'package:flutter_app/models/image.dart';
 import 'package:flutter_app/models/itemImage.dart';
 import 'package:flutter_app/util/constant.dart';
 import 'package:flutter_app/util/widgets.dart';
 import 'package:image_downloader/image_downloader.dart';
 import 'package:provider/provider.dart';
-import 'package:toast/toast.dart';
 
 allImage alldatanotif;
 
@@ -31,11 +29,7 @@ class WallpaperPage extends StatelessWidget {
   Widget buildBottomSheet(BuildContext) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            stops: [0.2, 1],
-            colors: [Colors.orange, Colors.pink]),
+        color: Colors.blueAccent,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -73,10 +67,9 @@ class WallpaperPage extends StatelessWidget {
   }
 
   Widget myBody(BuildContext context) {
-    Provider.of<allImage>(context, listen: false).changeimage(allimage[heroId]);
+    Provider.of<allImage>(context, listen: true).changeimage(allimage[heroId]);
     return Scaffold(
       body: Consumer<allImage>(builder: (context, temp, child) {
-        var alldata = data.getInstance();
         return SafeArea(
           child: Stack(
             children: <Widget>[
@@ -169,12 +162,7 @@ class WallpaperPage extends StatelessWidget {
                           width: double.infinity,
                           // height: MediaQuery.of(context).size.height - 200,
                           decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                stops: [0.2, 1],
-                                colors: [Colors.orange, Colors.pink]),
-                            color: Colors.white,
+                            color: Colors.lightBlueAccent,
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(16.0),
                               topRight: Radius.circular(16.0),
@@ -188,8 +176,11 @@ class WallpaperPage extends StatelessWidget {
                                 children: <Widget>[
                                   temp.image.isfav == 1
                                       ? IconButton(
-                                          icon: Icon(Icons.favorite),
-                                          color: Colors.purple,
+                                    icon: Icon(
+                                      Icons.favorite,
+                                      size: 35.0,
+                                    ),
+                                    color: Colors.red,
                                           onPressed: () {
                                             temp.deletefav();
                                             temp.setfav(0);
@@ -203,7 +194,10 @@ class WallpaperPage extends StatelessWidget {
                                           },
                                         ),
                                   IconButton(
-                                      icon: Icon(Icons.file_download),
+                                      icon: Icon(
+                                        Icons.file_download,
+                                        size: 35.0,
+                                      ),
                                       onPressed: () async {
                                         await ImageDownloader.downloadImage(
                                           constant.SERVER_IMAGE_UPFOLDER_CATEGORY +

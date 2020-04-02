@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -19,24 +20,28 @@ void showProgressDialog(BuildContext context, String message) {
   showDialog(
     context: context,
     barrierDismissible: false,
-    builder: (context) {
-      return Dialog(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 32.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              const CircularProgressIndicator(),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: Text(message),
+    builder: (context) =>
+        Dialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+          child: Container(
+            padding: EdgeInsets.all(10.0),
+            margin: EdgeInsets.all(5),
+            child: TextLiquidFill(
+              text: message,
+              waveDuration: Duration(seconds: 10),
+              waveColor: Colors.blueAccent,
+              boxBackgroundColor: Colors.white,
+              textStyle: TextStyle(
+                fontSize: 35.0,
+                fontWeight: FontWeight.w800,
+                fontFamily: "good2",
               ),
-            ],
+            ),
           ),
         ),
-      );
-    },
   );
 }
 

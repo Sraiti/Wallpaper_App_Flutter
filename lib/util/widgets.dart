@@ -2,8 +2,6 @@ import 'package:facebook_audience_network/ad/ad_banner.dart';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/util/constant.dart';
-import 'package:path/path.dart';
-import 'package:toast/toast.dart';
 
 class ShowMore extends StatelessWidget {
   final String text;
@@ -16,11 +14,7 @@ class ShowMore extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            stops: [0.2, 1],
-            colors: [Colors.orange, Colors.pink]),
+        color: Colors.lightBlue,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -37,10 +31,12 @@ class ShowMore extends StatelessWidget {
           ),
           haveButton
               ? FlatButton(
-                  color: Colors.black12,
+            color: Colors.black26,
                   child: Text(
                     'See all Favorites',
                     style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
                       fontSize: 12.0,
                       fontFamily: 'good2',
                     ),
@@ -65,8 +61,6 @@ class _facebookadState extends State<facebookadBanner> {
     height: 100.0,
     child: Text('cccc'),
   );
-
-  void _loadfbinter() {}
 
   @override
   void initState() {
@@ -117,7 +111,13 @@ class NativeAd extends StatefulWidget {
 }
 
 class _NativeAdState extends State<NativeAd> {
-  Widget _nativeAd = Image.asset("assets/images/loading_book.gif");
+  Widget _nativeAd = Image.asset(
+    "assets/images/loading_book.gif",
+    fit: BoxFit.cover,
+    alignment: Alignment.center,
+    width: double.infinity,
+    repeat: ImageRepeat.noRepeat,
+  );
 
   FacebookNativeAd FbNative;
 
@@ -250,6 +250,36 @@ class snakbarWidget extends StatelessWidget {
           Text(snaktext),
         ],
       ),
+    );
+  }
+}
+
+class ProgressWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return _showDialog(context);
+  }
+
+  Widget _showDialog(BuildContext context) {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Alert Dialog title"),
+          content: new Text("Alert Dialog body"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -45,6 +45,7 @@ class DBHelper {
       image.urlImage = list[i]['urlimage'];
       image.CatName = list[i]['CatName'];
       image.isfav = list[i]['isfav'];
+      print('Get Data SQl Lite :' + image.CatName);
       favorites.add(image);
     }
 
@@ -56,7 +57,9 @@ class DBHelper {
     var dbConnection = await db;
     String query =
         'INSERT INTO $Table_name (urlimage , isfav , CatName) VALUES(\'${image.urlImage}\',1,\'${image.CatName}\')';
-
+    print(
+        'INSERT INTO $Table_name (urlimage , isfav , CatName) VALUES(\'${image
+            .urlImage}\',1,\'${image.CatName}\')');
     await dbConnection.rawInsert(query);
 
     /* await dbConnection.transaction((transaction) async {
