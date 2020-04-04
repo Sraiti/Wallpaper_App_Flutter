@@ -4,10 +4,10 @@ import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/models/DataManager.dart';
 import 'package:flutter_app/models/itemImage.dart';
+import 'package:flutter_app/screens/ImagesViewer.dart';
+import 'package:flutter_app/screens/MasterScreen.dart';
 import 'package:flutter_app/screens/splash.dart';
-import 'package:flutter_app/screens/wallpaper.dart';
 import 'package:flutter_app/util/constant.dart';
-import 'package:flutter_app/util/sqlite.dart';
 import 'package:flutter_app/util/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -15,7 +15,7 @@ import 'favorites.dart';
 
 class homepage extends StatelessWidget {
   static final String id = "homepage";
-  var alldata = DataManager.getInstance();
+  DataManager alldata = DataManager.getInstance();
 
   ///Facebook ADS Stuff
 //  NativeAd nativeAd;
@@ -33,7 +33,7 @@ class homepage extends StatelessWidget {
 //    return interstitialAd;
 // }
 
-  Widget buildBottomSheet(BuildContext) {
+  Widget buildBottomSheet(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -63,7 +63,7 @@ class homepage extends StatelessWidget {
               FlatButton.icon(
                 onPressed: () {
                   alldata.DeleteAllImages();
-                  Navigator.pop(BuildContext, true);
+                  Navigator.pop(context);
                 },
                 label: Text(
                   'Exit',
@@ -85,7 +85,12 @@ class homepage extends StatelessWidget {
                   } else {
                     throw 'Could not launch $url';
                   }
-                  Navigator.pop(BuildContext, false);
+                  Navigator.pop(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MasterPage(),
+                    ),
+                  );
                 },
                 label: Text(
                   'Rate',
@@ -107,9 +112,6 @@ class homepage extends StatelessWidget {
   }
 
   Future<bool> _onBackPressed(context) {
-    print("alldata :ClickedCat  " + alldata.ClickedCat.toString());
-    print(" alldata: allImage  " + alldata.allImage.toString());
-
     return showModalBottomSheet(context: context, builder: buildBottomSheet);
   }
 
@@ -117,33 +119,39 @@ class homepage extends StatelessWidget {
   Widget build(BuildContext context) {
 //    nativeAd = NativeAd();
 //    _loadInter();
-    return WillPopScope(
-      onWillPop: () => _onBackPressed(context),
-      child: Scaffold(
-        body: SafeArea(
-          child: Column(children: <Widget>[
-            ShowMore(
-                text: 'Favorites',
-                haveButton: true,
-                onTap: () {
-                  constant.count++;
-                  constant.count % 3 == 0
-                      ? FacebookInterstitialAd.showInterstitialAd(delay: 0)
-                      : Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Favorites(),
-                          ),
-                        );
-                }),
-            FavoriteSlider(),
-            facebookadBanner(),
-            ShowMore(
-              text: alldata.ClickedCat.name,
-              haveButton: false,
+    return MaterialApp(
+      home: WillPopScope(
+        onWillPop: () => _onBackPressed(context),
+        child: Scaffold(
+          body: SafeArea(
+            child: Column(
+              children: <Widget>[
+                ShowMore(
+                    text: 'Favorites',
+                    haveButton: true,
+                    onTap: () {
+                      constant.count++;
+                      constant.count % 3 == 0
+                          ? FacebookInterstitialAd.showInterstitialAd(delay: 0)
+                          : Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Favorites(),
+                        ),
+                      );
+                    }),
+                FavoriteSlider(
+                  dataManger: alldata,
+                ),
+                facebookadBanner(),
+                ShowMore(
+                  text: alldata.ClickedCat.name,
+                  haveButton: false,
+                ),
+                Latest(),
+              ],
             ),
-            Latest(),
-          ]),
+          ),
         ),
       ),
     );
@@ -151,17 +159,14 @@ class homepage extends StatelessWidget {
 }
 
 class FavoriteSlider extends StatelessWidget {
-  const FavoriteSlider({
-    Key key,
-    @required this.allfav,
-  }) : super(key: key);
+  const FavoriteSlider({this.dataManger});
 
-  final List<itemImage> allfav;
+  final DataManager dataManger;
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: getfav(),
+      future: dataManger.getAllFavImages(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           List<itemImage> images = snapshot.data ?? [];
@@ -175,8 +180,6 @@ class FavoriteSlider extends StatelessWidget {
                   itemBuilder: (BuildContext context, int itemIndex) {
                     return Builder(
                       builder: (BuildContext context) {
-                        DataManager alldata = DataManager.getInstance();
-
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Stack(
@@ -192,10 +195,7 @@ class FavoriteSlider extends StatelessWidget {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            WallpaperPage(
-                                              heroId: itemIndex,
-                                              allimage: images,
-                                            ),
+                                            ImagesViewer(),
                                       ),
                                     );
                                   },
@@ -331,9 +331,9 @@ class _LatestState extends State<Latest> {
                             : Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => WallpaperPage(
-                                      heroId: index,
-                                      allimage: alldata.allImage),
+                                  builder: (context) {
+                                    return ImagesViewer();
+                                  },
                                 ),
                               );
                       },
@@ -422,11 +422,4 @@ class ScreenArguments {
   final List<itemImage> allimage;
 
   ScreenArguments(this.heroId, this.allimage);
-}
-
-Future<List<itemImage>> getfav() async {
-  var dbhepler = DBHelper();
-  List<itemImage> favs = await dbhepler.getfavorites();
-
-  return favs;
 }

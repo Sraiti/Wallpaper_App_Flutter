@@ -1,5 +1,6 @@
 import 'package:flutter_app/models/cat.dart';
 import 'package:flutter_app/models/itemImage.dart';
+import 'package:flutter_app/util/sqlite.dart';
 
 class DataManager {
   static DataManager Instanse;
@@ -9,7 +10,7 @@ class DataManager {
     return Instanse;
   }
 
-  List allfavorites = [];
+  List<itemImage> allFavImages = [];
   List<itemImage> allImage = [];
   List<CatItem> allcats = [];
 
@@ -23,5 +24,12 @@ class DataManager {
 
   void DeleteAllImages() {
     allImage.clear();
+  }
+
+  Future<List<itemImage>> getAllFavImages() async {
+    var dbhepler = DBHelper();
+    allFavImages = await dbhepler.getFavorites();
+
+    return allFavImages;
   }
 }

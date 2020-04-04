@@ -14,8 +14,6 @@ import 'package:flutter_app/util/widgets.dart';
 import 'package:image_downloader/image_downloader.dart';
 import 'package:provider/provider.dart';
 
-allImage alldatanotif;
-
 class WallpaperPage extends StatelessWidget {
   WallpaperPage({this.heroId, this.allimage});
 
@@ -34,7 +32,9 @@ class WallpaperPage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          Expanded(child: NativeAd()),
+          Expanded(
+            child: NativeAd(),
+          ),
           Text(
             "Share Image with Your Friends",
             style: TextStyle(
@@ -67,7 +67,7 @@ class WallpaperPage extends StatelessWidget {
   }
 
   Widget myBody(BuildContext context) {
-    Provider.of<allImage>(context, listen: true).changeimage(allimage[heroId]);
+    Provider.of<allImage>(context, listen: false).changeimage(allimage[heroId]);
     return Scaffold(
       body: Consumer<allImage>(builder: (context, temp, child) {
         return SafeArea(

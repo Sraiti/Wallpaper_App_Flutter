@@ -20,11 +20,11 @@ class allImage with ChangeNotifier {
 
   void addToFav() {
     DBHelper dbhelper = DBHelper();
-    dbhelper.addToFavoret(_tempimage);
+    dbhelper.addToFavorites(_tempimage);
   }
 
   void deletefav() {
     DBHelper dbhelper = DBHelper();
-    dbhelper.deletFromFavoret(_tempimage);
+    dbhelper.deleteFromFavorites(_tempimage);
   }
 }

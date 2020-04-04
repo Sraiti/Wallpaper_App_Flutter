@@ -8,13 +8,12 @@ import 'package:flutter_app/util/constant.dart';
 import 'package:http/http.dart';
 
 class splash extends StatelessWidget {
-  var alldata = DataManager.getInstance();
+  DataManager alldata = DataManager.getInstance();
   static final String id = "splash";
   Future<void> getData() async {
     Response responseCat = await get(constant.CATEGORY_URL);
     Map _categories = jsonDecode(responseCat.body);
 
-    //TODO ADD AWAIT AND ASYNC TO THAT
     for (var catJson in _categories['HDwallpaper']) {
       CatItem cat = new CatItem(
         id: int.parse(catJson['cid']),

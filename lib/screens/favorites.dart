@@ -14,7 +14,7 @@ class Favorites extends StatelessWidget {
 
   Future<List<itemImage>> getfav() async {
     var dbhepler = DBHelper();
-    Future<List<itemImage>> favs = dbhepler.getfavorites();
+    Future<List<itemImage>> favs = dbhepler.getFavorites();
     return favs;
   }
 

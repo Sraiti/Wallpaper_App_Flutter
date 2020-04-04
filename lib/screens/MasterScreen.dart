@@ -6,11 +6,15 @@ import 'package:flutter_app/models/DataManager.dart';
 import 'package:flutter_app/models/cat.dart';
 import 'package:flutter_app/models/itemImage.dart';
 import 'package:flutter_app/util/ConstantStyles.dart';
+import 'package:flutter_app/util/DarkThemeProvider.dart';
+import 'package:flutter_app/util/Styles.dart';
 import 'package:flutter_app/util/constant.dart';
-import 'package:flutter_app/util/util.dart';
 import 'package:http/http.dart';
+import 'package:provider/provider.dart';
 
 import 'home_page.dart';
+
+String title_string = "Categories";
 
 class Destination {
   const Destination(this.title, this.icon, this.color);
@@ -21,22 +25,19 @@ class Destination {
 }
 
 const List<Destination> allDestinations = <Destination>[
-  Destination('Categories', Icons.category, Colors.blue),
+  Destination('Categories', Icons.category, Colors.blueAccent),
   Destination('Settings', Icons.settings, Colors.blueAccent),
 ];
 
 class RootPage extends StatelessWidget {
-  RootPage({Key key, this.destination}) : super(key: key);
+  RootPage({this.destination});
   final Destination destination;
   DataManager alldata = DataManager.getInstance();
+  DarkThemeProvider themeChangeProvider = new DarkThemeProvider();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(destination.title),
-        backgroundColor: destination.color,
-      ),
       backgroundColor: destination.color.withAlpha(50),
       body: SafeArea(
         child: Container(
@@ -74,16 +75,20 @@ class RootPage extends StatelessWidget {
                               for (var imageItem in _data['HDwallpaper']) {
                                 itemImage image = new itemImage();
                                 image.urlImage = imageItem['images'].toString();
-                                print(image.urlImage);
+                                // print(image.urlImage);
                                 image.isfav = 0;
                                 image.CatName =
                                     imageItem['cat_name'].toString();
                                 alldata.allImage.add(image);
                               }
                             } catch (e) {
+                              print("Clicked 0");
+
                               Navigator.pop(context);
                             }
+                            print("Clicked 1");
                             Navigator.pop(context);
+
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -114,7 +119,6 @@ class CategoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        showProgressDialog(context, "Fetching Images");
         function();
       },
       child: Card(
@@ -164,14 +168,15 @@ class TextPage extends StatefulWidget {
 class _TextPageState extends State<TextPage> {
   @override
   Widget build(BuildContext context) {
+    final themeChange = Provider.of<DarkThemeProvider>(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.destination.title),
-        backgroundColor: widget.destination.color,
-      ),
       backgroundColor: widget.destination.color.withAlpha(50),
       body: Container(
-        child: Text("Text"),
+        child: Checkbox(
+            value: themeChange.darkTheme,
+            onChanged: (bool value) {
+              themeChange.darkTheme = value;
+            }),
       ),
     );
   }
@@ -187,9 +192,25 @@ class MasterPage extends StatefulWidget {
 class _MasterPageState extends State<MasterPage> {
   int _currentIndex = 0;
 
+  DarkThemeProvider themeChangeProvider = new DarkThemeProvider();
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentAppTheme();
+  }
+
+  void getCurrentAppTheme() async {
+    themeChangeProvider.darkTheme =
+    await themeChangeProvider.darkThemePreference.getTheme();
+  }
+
   void bottomTapped(int index) {
     setState(() {
       _currentIndex = index;
+      (_currentIndex == 0)
+          ? title_string = "Categories"
+          : title_string = "Settings";
       pageController.animateToPage(index,
           duration: Duration(milliseconds: 500), curve: Curves.ease);
     });
@@ -198,6 +219,9 @@ class _MasterPageState extends State<MasterPage> {
   void pageChanged(int index) {
     setState(() {
       _currentIndex = index;
+      (_currentIndex == 0)
+          ? title_string = "Categories"
+          : title_string = "Settings";
     });
   }
 
@@ -208,32 +232,55 @@ class _MasterPageState extends State<MasterPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: PageView(
-        controller: pageController,
-        onPageChanged: (index) {
-          pageChanged(index);
-        },
-        children: <Widget>[
-          RootPage(destination: allDestinations[0]),
-          TextPage(destination: allDestinations[1])
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (int index) {
-          setState(() {
-            _currentIndex = index;
-            bottomTapped(index);
-          });
-        },
-        items: allDestinations.map((Destination destination) {
-          return BottomNavigationBarItem(
-              icon: Icon(destination.icon),
-              backgroundColor: destination.color,
-              title: Text(destination.title));
-        }).toList(),
-      ),
+    return ChangeNotifierProvider(
+      child: Consumer<DarkThemeProvider>(builder: (BuildContext context,
+          value,
+          Widget child,) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: Styles.themeData(themeChangeProvider.darkTheme, context),
+          home: Scaffold(
+            appBar: AppBar(
+              title: Text(title_string),
+            ),
+            body: PageView(
+              controller: pageController,
+              onPageChanged: (index) {
+                pageChanged(index);
+              },
+              children: <Widget>[
+                RootPage(destination: allDestinations[0]),
+                TextPage(destination: allDestinations[1])
+              ],
+            ),
+            bottomNavigationBar: BottomNavigationBar(
+              currentIndex: _currentIndex,
+              onTap: (int index) {
+                setState(() {
+                  _currentIndex = index;
+                  bottomTapped(index);
+                });
+              },
+              items: allDestinations.map((Destination destination) {
+                return BottomNavigationBarItem(
+                    icon: Icon(
+                      destination.icon,
+                      color: destination.color,
+                      size: 25.0,
+                    ),
+                    backgroundColor: destination.color,
+                    title: Text(
+                      destination.title,
+                      style: TextStyle(color: destination.color),
+                    ));
+              }).toList(),
+            ),
+          ),
+        );
+      }),
+      create: (BuildContext context) {
+        return themeChangeProvider;
+      },
     );
   }
 }

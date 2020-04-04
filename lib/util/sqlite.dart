@@ -25,16 +25,16 @@ class DBHelper {
   initDB() async {
     io.Directory documentsdirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsdirectory.path, "MyDB.db");
-    var db = await openDatabase(path, version: 1, onCreate: oncreatDb);
+    var db = await openDatabase(path, version: 1, onCreate: onCreatDB);
     return db;
   }
 
-  void oncreatDb(Database db, int version) async {
+  void onCreatDB(Database db, int version) async {
     await db.execute(
         'CREATE TABLE $Table_name (id INTEGER PRIMARY KEY AUTOINCREMENT , urlimage TEXT , isfav INTEGER , CatName TEXT);');
   }
 
-  Future<List<itemImage>> getfavorites() async {
+  Future<List<itemImage>> getFavorites() async {
     var dbConnection = await db;
     List<Map> list = await dbConnection.rawQuery('SELECT * FROM $Table_name');
     List<itemImage> favorites = new List();
@@ -45,21 +45,17 @@ class DBHelper {
       image.urlImage = list[i]['urlimage'];
       image.CatName = list[i]['CatName'];
       image.isfav = list[i]['isfav'];
-      print('Get Data SQl Lite :' + image.CatName);
+
       favorites.add(image);
     }
 
     return favorites;
   }
 
-  void addToFavoret(itemImage image) async {
-    print(image.urlImage);
+  void addToFavorites(itemImage image) async {
     var dbConnection = await db;
     String query =
         'INSERT INTO $Table_name (urlimage , isfav , CatName) VALUES(\'${image.urlImage}\',1,\'${image.CatName}\')';
-    print(
-        'INSERT INTO $Table_name (urlimage , isfav , CatName) VALUES(\'${image
-            .urlImage}\',1,\'${image.CatName}\')');
     await dbConnection.rawInsert(query);
 
     /* await dbConnection.transaction((transaction) async {
@@ -67,7 +63,7 @@ class DBHelper {
     });*/
   }
 
-  void deletFromFavoret(itemImage image) async {
+  void deleteFromFavorites(itemImage image) async {
     var dbConnection = await db;
     String query =
         'DELETE FROM $Table_name where urlimage like \'${image.urlImage}\'';
