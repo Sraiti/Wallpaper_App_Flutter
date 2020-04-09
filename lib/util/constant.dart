@@ -69,7 +69,8 @@ class constant {
   //static final String onesignal_app_id = "93a9b681-97bd-4fa8-af4c-c0f152cfeffa";
 
   // counter for Show Inyterstitial
-  static int count = 0;
+  static int countInter = 4;
+  static int countNative = 1;
 
   //this is the path of uploaded image of server where image store
   static final String SERVER_IMAGE_UPFOLDER_CATEGORY =
@@ -102,6 +103,8 @@ class constant {
   static final String CATEGORY_NAME = "category_name";
   static final String CATEGORY_CID = "cid";
   static final String CATEGORY_IMAGE_URL = "category_image";
+
+  static final String aboutUrl = "";
 
   //for title display in CategoryItemF
   static String CATEGORY_TITLE;

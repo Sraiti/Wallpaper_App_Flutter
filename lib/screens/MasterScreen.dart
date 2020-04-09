@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/models/DataManager.dart';
 import 'package:flutter_app/models/ImageItem.dart';
@@ -11,6 +10,7 @@ import 'package:flutter_app/util/DarkThemeProvider.dart';
 import 'package:flutter_app/util/Styles.dart';
 import 'package:flutter_app/util/constant.dart';
 import 'package:flutter_app/util/util.dart';
+import 'package:flutter_app/util/widgets.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
@@ -135,6 +135,7 @@ class CategoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        showProgressDialog(context, "Downloading ...");
         function();
       },
       child: Card(
@@ -222,32 +223,23 @@ class _SettingsPageState extends State<SettingsPage> {
                   Text("Dark Mode"),
                 ],
               ),
-              FacebookNativeAd(
-                placementId: "756894781441261_759233337874072",
-                adType: NativeAdType.NATIVE_BANNER_AD,
-                bannerAdSize: NativeBannerAdSize.HEIGHT_100,
-                width: double.infinity,
-                backgroundColor: Colors.blue,
-                titleColor: Colors.white,
-                descriptionColor: Colors.white,
-                buttonColor: Colors.deepPurple,
-                buttonTitleColor: Colors.white,
-                buttonBorderColor: Colors.white,
-                listener: (result, value) {
-                  print("Native Ad: $result --> $value");
-                },
-              ),
+              NativeAd(),
               Container(
                 color: Colors.blueAccent.shade100,
-                child: ListTile(
-                  title: Text(
-                    "About The App",
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontFamily: "good2",
-                      fontWeight: FontWeight.w500,
+                child: GestureDetector(
+                  onTap: () {
+                    launchURL(constant.aboutUrl);
+                  },
+                  child: ListTile(
+                    title: Text(
+                      "About The App",
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontFamily: "good2",
+                        fontWeight: FontWeight.w500,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
                   ),
                 ),
               ),
@@ -255,14 +247,6 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
         ],
       ),
-    );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    FacebookAudienceNetwork.init(
-      testingId: "2f289099-1391-45ba-b87d-4feb3a89b5d4",
     );
   }
 }
@@ -278,43 +262,12 @@ class _MasterPageState extends State<MasterPage> {
   int _currentIndex = 0;
 
   DarkThemeProvider themeChangeProvider = new DarkThemeProvider();
-  bool _isInterstitialAdLoaded = false;
-  bool _isRewardedAdLoaded = false;
-  bool _isRewardedVideoComplete = false;
+
   @override
   void initState() {
     super.initState();
     getCurrentAppTheme();
-    FacebookAudienceNetwork.init(
-      testingId: "2f289099-1391-45ba-b87d-4feb3a89b5d4",
-    );
-    _loadInterstitialAd();
-  }
-
-  _showInterstitialAd() {
-    if (_isInterstitialAdLoaded == true)
-      FacebookInterstitialAd.showInterstitialAd();
-    else
-      print("Interstial Ad not yet loaded!");
-  }
-
-  void _loadInterstitialAd() {
-    FacebookInterstitialAd.loadInterstitialAd(
-      placementId: constant.Interstitial,
-      listener: (result, value) {
-        print("Interstitial Ad: $result --> $value");
-        if (result == InterstitialAdResult.LOADED)
-          _isInterstitialAdLoaded = true;
-
-        /// Once an Interstitial Ad has been dismissed and becomes invalidated,
-        /// load a fresh Ad by calling this function.
-        if (result == InterstitialAdResult.DISMISSED &&
-            value["invalidated"] == true) {
-          _isInterstitialAdLoaded = false;
-          _loadInterstitialAd();
-        }
-      },
-    );
+    loadInterstitialAd();
   }
 
   void getCurrentAppTheme() async {
@@ -335,7 +288,7 @@ class _MasterPageState extends State<MasterPage> {
 
   void pageChanged(int index) {
     setState(() {
-      _showInterstitialAd();
+      showInterstitialAd();
       _currentIndex = index;
       (_currentIndex == 0)
           ? title_string = "Categories"
@@ -345,7 +298,6 @@ class _MasterPageState extends State<MasterPage> {
 
   PageController pageController = PageController(
     initialPage: 0,
-    keepPage: true,
   );
 
   @override

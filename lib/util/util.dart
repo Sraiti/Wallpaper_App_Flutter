@@ -1,7 +1,10 @@
 import 'dart:io';
 
-import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:facebook_audience_network/ad/ad_interstitial.dart';
+import 'package:facebook_audience_network/facebook_audience_network.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/util/constant.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 bool saveImage(Map<String, dynamic> map) {
@@ -19,26 +22,22 @@ bool saveImage(Map<String, dynamic> map) {
 void showProgressDialog(BuildContext context, String message) {
   showDialog(
     context: context,
-    barrierDismissible: false,
+    useRootNavigator: false,
     builder: (context) =>
         Dialog(
-          backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.0),
           ),
-          child: Container(
-            padding: EdgeInsets.all(10.0),
-            margin: EdgeInsets.all(5),
-            child: TextLiquidFill(
-              text: message,
-              waveDuration: Duration(seconds: 10),
-              waveColor: Colors.blueAccent,
-              boxBackgroundColor: Colors.white,
-              textStyle: TextStyle(
-                fontSize: 35.0,
-                fontWeight: FontWeight.w800,
-                fontFamily: "good2",
-              ),
+          child: Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Row(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: CircularProgressIndicator(),
+                ),
+                Text(message),
+              ],
             ),
           ),
         ),
@@ -53,26 +52,31 @@ void launchURL(url) async {
   }
 }
 
-SnackBar snackBar() {
-  String snaktext;
-  IconData snakicon;
+bool _isInterstitialAdLoaded = false;
+bool _isRewardedAdLoaded = false;
+bool _isRewardedVideoComplete = false;
 
-  snackBar(String snaktext, IconData snakicon) {
-    snaktext;
-    snakicon;
-  }
+void loadInterstitialAd() {
+  FacebookInterstitialAd.loadInterstitialAd(
+    placementId: constant.Interstitial,
+    listener: (result, value) {
+      print("Interstitial Ad: $result --> $value");
+      if (result == InterstitialAdResult.LOADED) _isInterstitialAdLoaded = true;
 
-  ;
-  return SnackBar(
-    content: Row(
-      mainAxisSize: MainAxisSize.max,
-      children: <Widget>[
-        Icon(snakicon),
-        SizedBox(
-          width: 12.0,
-        ),
-        Text(snaktext),
-      ],
-    ),
+      /// Once an Interstitial Ad has been dismissed and becomes invalidated,
+      /// load a fresh Ad by calling this function.
+      if (result == InterstitialAdResult.DISMISSED &&
+          value["invalidated"] == true) {
+        _isInterstitialAdLoaded = false;
+        loadInterstitialAd();
+      }
+    },
   );
+}
+
+showInterstitialAd() {
+  if (_isInterstitialAdLoaded == true)
+    FacebookInterstitialAd.showInterstitialAd();
+  else
+    print("Interstial Ad not yet loaded!");
 }

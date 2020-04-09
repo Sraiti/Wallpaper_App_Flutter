@@ -1,3 +1,4 @@
+import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/screens/Home_Page.dart';
 import 'package:flutter_app/screens/ImagesViewer.dart';
@@ -27,6 +28,9 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     getCurrentAppTheme();
+    FacebookAudienceNetwork.init(
+      testingId: "f9505dcf-de56-4d78-bb83-2a452e02861f",
+    );
   }
 
   @override

@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/models/DataManager.dart';
 import 'package:flutter_app/models/ImageItem.dart';
@@ -50,6 +49,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     getCurrentAppTheme();
+    loadInterstitialAd();
   }
 
   void getCurrentAppTheme() async {
@@ -89,8 +89,8 @@ class _HomePageState extends State<HomePage> {
             children: <Widget>[
               FlatButton.icon(
                 onPressed: () {
-                  alldata.deleteAllImages();
-                  Navigator.of(context).push(
+                  Navigator.pushReplacement(
+                    context,
                     MaterialPageRoute(
                       builder: (context) => MasterPage(),
                     ),
@@ -116,11 +116,6 @@ class _HomePageState extends State<HomePage> {
                   } else {
                     throw 'Could not launch $url';
                   }
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => MasterPage(),
-                    ),
-                  );
                 },
                 label: Text(
                   'Rate',
@@ -154,7 +149,7 @@ class _HomePageState extends State<HomePage> {
           value,
           Widget child,) {
         return WillPopScope(
-          onWillPop: () async => _onBackPressed(context),
+          onWillPop: () => _onBackPressed(context),
           child: MaterialApp(
             theme: Styles.themeData(themeChangeProvider.darkTheme, context),
             home: Scaffold(
@@ -287,10 +282,9 @@ class _HomePageState extends State<HomePage> {
                       text: 'Favorites',
                       haveButton: true,
                       onTap: () {
-                        constant.count++;
-                        constant.count % 3 == 0
-                            ? FacebookInterstitialAd.showInterstitialAd(
-                            delay: 0)
+                        constant.countInter++;
+                        constant.countInter % 7 == 0
+                            ? showInterstitialAd()
                             : Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -445,36 +439,6 @@ class Latest extends StatelessWidget {
   final DataManager dataManger;
   bool isload = true;
 
-//
-//  _scrollListener() {
-//    if (alldata.allImage.length < length) {
-//      length = alldata.allImage.length;
-//
-//      return;
-//    }
-//
-//    if (_scrollController.position.pixels >
-//        _scrollController.position.maxScrollExtent - 200)
-//      setState(() {
-//        length += 30;
-//      });
-//  }
-//
-//  @override
-//  void initState() {
-//    // TODO: implement initState
-//    super.initState();
-////    FacebookAudienceNetwork.init(
-////        testingId: "e6d67e88-aced-4e6f-b392-79d9d6e9b676");
-////    print("initiii $length");
-////    _scrollController = new ScrollController(
-////      // NEW
-////      initialScrollOffset: 0.0, // NEW
-////      keepScrollOffset: true, // NEW
-////    );
-////    _scrollController.addListener(_scrollListener);
-//  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -490,9 +454,9 @@ class Latest extends StatelessWidget {
           itemBuilder: (context, index) {
             return GestureDetector(
               onTap: () {
-                constant.count++;
-                constant.count % 7 == 0
-                    ? FacebookInterstitialAd.showInterstitialAd(delay: 0)
+                constant.countInter++;
+                constant.countInter % 7 == 0
+                    ? showInterstitialAd()
                     : Navigator.push(
                   context,
                   MaterialPageRoute(
