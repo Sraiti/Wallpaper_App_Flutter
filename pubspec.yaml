@@ -22,21 +22,22 @@ dependencies:
   provider: ^4.0.4
   http: ^0.12.0+4
   cached_network_image: ^2.0.0
-  toast: ^0.1.5
   carousel_slider: ^1.4.1
   sqflite: ^1.2.0
   path_provider: ^1.6.5
   path: ^1.6.4
-  image_picker: ^0.6.3+4
+  animated_text_kit: ^2.0.0
   facebook_audience_network: ^0.5.0
   esys_flutter_share: ^1.0.2
   image_downloader: ^0.19.2
   url_launcher: ^5.4.2
-  onesignal_flutter: ^2.0.0
+  shared_preferences: ^0.5.6+3
+  splashscreen: ^1.2.0
+  fluttertoast: ^4.0.1
+  dependency_validator: ^1.0.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^0.1.2
 
 dev_dependencies:
   flutter_test:
