@@ -19,13 +19,24 @@ class ShowMore extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
+          haveButton
+              ? IconButton(
+            icon: Icon(Icons.menu),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+          )
+              : Container(),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
               text,
+              textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 22.0,
-                fontFamily: 'Caveat',
+                fontSize: 20.0,
+                wordSpacing: 2.0,
+                fontFamily: 'good2',
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
@@ -33,11 +44,11 @@ class ShowMore extends StatelessWidget {
               ? FlatButton(
             color: Colors.black26,
                   child: Text(
-                    'See all Favorites',
+                    'Favorites',
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
-                      fontSize: 12.0,
+                      fontSize: 15.0,
                       fontFamily: 'good2',
                     ),
                   ),

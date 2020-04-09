@@ -1,5 +1,5 @@
-class itemImage {
-  static itemImage current;
+class ImageItem {
+  static ImageItem current;
 
   String urlImage;
   String CatName;
@@ -10,5 +10,5 @@ class itemImage {
     return (CatName == other.CatName && urlImage == other.urlImage);
   }
 
-  itemImage();
+  ImageItem();
 }

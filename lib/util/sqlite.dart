@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io' as io;
 
-import 'package:flutter_app/models/itemImage.dart';
+import 'package:flutter_app/models/ImageItem.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -34,13 +34,13 @@ class DBHelper {
         'CREATE TABLE $Table_name (id INTEGER PRIMARY KEY AUTOINCREMENT , urlimage TEXT , isfav INTEGER , CatName TEXT);');
   }
 
-  Future<List<itemImage>> getFavorites() async {
+  Future<List<ImageItem>> getFavorites() async {
     var dbConnection = await db;
     List<Map> list = await dbConnection.rawQuery('SELECT * FROM $Table_name');
-    List<itemImage> favorites = new List();
+    List<ImageItem> favorites = new List();
 
     for (int i = 0; i < list.length; i++) {
-      itemImage image = new itemImage();
+      ImageItem image = new ImageItem();
       //image.Id = list[i]['id'];
       image.urlImage = list[i]['urlimage'];
       image.CatName = list[i]['CatName'];
@@ -52,10 +52,11 @@ class DBHelper {
     return favorites;
   }
 
-  void addToFavorites(itemImage image) async {
+  void addToFavorites(ImageItem image) async {
     var dbConnection = await db;
     String query =
-        'INSERT INTO $Table_name (urlimage , isfav , CatName) VALUES(\'${image.urlImage}\',1,\'${image.CatName}\')';
+        'INSERT INTO $Table_name (urlimage , isfav , CatName) VALUES(\'${image
+        .urlImage}\',${image.isfav},\'${image.CatName}\')';
     await dbConnection.rawInsert(query);
 
     /* await dbConnection.transaction((transaction) async {
@@ -63,13 +64,15 @@ class DBHelper {
     });*/
   }
 
-  void deleteFromFavorites(itemImage image) async {
+  void deleteFromFavorites(ImageItem image) async {
     var dbConnection = await db;
     String query =
         'DELETE FROM $Table_name where urlimage like \'${image.urlImage}\'';
     //await dbConnection.rawInsert(query);
-    await dbConnection.transaction((transaction) async {
-      return await transaction.rawQuery(query);
-    });
+    await dbConnection.transaction(
+          (transaction) async {
+        return await transaction.rawQuery(query);
+      },
+    );
   }
 }

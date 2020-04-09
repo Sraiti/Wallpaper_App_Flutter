@@ -6,11 +6,18 @@ import 'package:flutter_app/models/cat.dart';
 import 'package:flutter_app/screens/MasterScreen.dart';
 import 'package:flutter_app/util/constant.dart';
 import 'package:http/http.dart';
+import 'package:splashscreen/splashscreen.dart';
 
-class splash extends StatelessWidget {
-  DataManager alldata = DataManager.getInstance();
+class Splash extends StatefulWidget {
   static final String id = "splash";
-  Future<void> getData() async {
+
+  @override
+  _SplashState createState() => _SplashState();
+}
+
+class _SplashState extends State<Splash> {
+  void getCategoriesData() async {
+    DataManager alldata = DataManager.getInstance();
     Response responseCat = await get(constant.CATEGORY_URL);
     Map _categories = jsonDecode(responseCat.body);
 
@@ -21,61 +28,53 @@ class splash extends StatelessWidget {
         name: catJson['category_name'].toString(),
       );
 
-      if (!alldata.allcats.contains(cat)) {
-        alldata.allcats.add(cat);
+      if (!alldata.allCategories.contains(cat)) {
+        alldata.allCategories.add(cat);
         print("Cat Added ${cat.name} " +
-            alldata.allcats.contains(cat).toString());
+            alldata.allCategories.contains(cat).toString());
       }
     }
   }
 
-//  /* Future<void> startactivity() async {
-//    print('not yet');
-//    Response response = await get(constant.LATEST_URL);
-//    Map _data = jsonDecode(response.body);
-//    print('finish');
-//
-//    for (var word in _data['HDwallpaper']) {
-//      alldata.allImage.add(word['image'].toString());
-//    }
-//
-//    return runApp(homepage());
-//  }*/
+  @override
+  void initState() {
+    super.initState();
+    getCategoriesData();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: FutureBuilder(
-        future: getData(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done)
-            return MasterPage();
-          else
-            return splashBody();
-        },
+    return MaterialApp(
+      home: Scaffold(
+        backgroundColor: Colors.white,
+        body: SplashScreen(
+          seconds: 5,
+          navigateAfterSeconds: MasterPage(),
+          title: Text(
+            'Welcome In ${constant.nameApp}',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              wordSpacing: 5.0,
+              fontSize: 30.0,
+            ),
+          ),
+          image: Image.asset('assets/images/logo.png'),
+          backgroundColor: Colors.white,
+          styleTextUnderTheLoader: new TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 48.0,
+          ),
+          photoSize: 100.0,
+          loaderColor: Colors.red,
+          imageBackground: AssetImage('assets/images/splashimage.jpg'),
+        ),
       ),
     );
   }
-
-//  void navigate(context) async {
-//    await Future.delayed(
-//      const Duration(seconds: 8),
-//      () => Navigator.push(
-//        context,
-//        MaterialPageRoute(
-//          builder: (context) => homepage(),
-//        ),
-//      ),
-//    );
-//  }
 }
 
-class splashBody extends StatelessWidget {
-  const splashBody({
-    Key key,
-  }) : super(key: key);
-
+class SplashBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -98,15 +97,12 @@ class splashBody extends StatelessWidget {
               child: Container(
                 width: 100,
                 height: 100,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: FadeInImage(
-                    image: AssetImage(
-                      'assets/images/logo.png',
-                    ),
-                    fit: BoxFit.cover,
-                    placeholder: AssetImage('assets/images/loading.png'),
+                child: FadeInImage(
+                  image: AssetImage(
+                    'assets/images/logo.png',
                   ),
+                  fit: BoxFit.cover,
+                  placeholder: AssetImage('assets/images/loading.png'),
                 ),
               ),
             ),

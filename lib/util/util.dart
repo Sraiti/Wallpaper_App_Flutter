@@ -45,7 +45,7 @@ void showProgressDialog(BuildContext context, String message) {
   );
 }
 
-_launchURL(url) async {
+void launchURL(url) async {
   if (await canLaunch(url)) {
     await launch(url);
   } else {

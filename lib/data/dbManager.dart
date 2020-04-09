@@ -1,29 +1,30 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter_app/models/itemImage.dart';
+import 'package:flutter_app/models/ImageItem.dart';
 import 'package:flutter_app/util/sqlite.dart';
 
 //this class for change favorite color
-class allImage with ChangeNotifier {
-  itemImage _tempimage;
+class ImageDBController {
+  ImageItem _tempimage;
 
-  itemImage get image => _tempimage;
+  ImageItem get image => _tempimage;
 
-  void changeimage(itemImage image) {
+  ImageDBController();
+
+  void changeimage(ImageItem image) {
     this._tempimage = image;
-    notifyListeners();
+//    notifyListeners();
   }
 
   void setfav(int fav) {
     _tempimage.isfav = fav;
-    notifyListeners();
+//    notifyListeners();
   }
 
-  void addToFav() {
+  void addToFav(ImageItem _tempimage) {
     DBHelper dbhelper = DBHelper();
     dbhelper.addToFavorites(_tempimage);
   }
 
-  void deletefav() {
+  void deletefav(ImageItem _tempimage) {
     DBHelper dbhelper = DBHelper();
     dbhelper.deleteFromFavorites(_tempimage);
   }

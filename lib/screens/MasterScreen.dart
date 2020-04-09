@@ -1,18 +1,20 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/models/DataManager.dart';
+import 'package:flutter_app/models/ImageItem.dart';
 import 'package:flutter_app/models/cat.dart';
-import 'package:flutter_app/models/itemImage.dart';
-import 'package:flutter_app/util/ConstantStyles.dart';
 import 'package:flutter_app/util/DarkThemeProvider.dart';
 import 'package:flutter_app/util/Styles.dart';
 import 'package:flutter_app/util/constant.dart';
+import 'package:flutter_app/util/util.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
-import 'home_page.dart';
+import 'Home_Page.dart';
 
 String title_string = "Categories";
 
@@ -29,82 +31,96 @@ const List<Destination> allDestinations = <Destination>[
   Destination('Settings', Icons.settings, Colors.blueAccent),
 ];
 
-class RootPage extends StatelessWidget {
+class RootPage extends StatefulWidget {
   RootPage({this.destination});
   final Destination destination;
-  DataManager alldata = DataManager.getInstance();
+
+  @override
+  _RootPageState createState() => _RootPageState();
+}
+
+class _RootPageState extends State<RootPage> {
+  DataManager allData = DataManager.getInstance();
+
   DarkThemeProvider themeChangeProvider = new DarkThemeProvider();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: destination.color.withAlpha(50),
-      body: SafeArea(
-        child: Container(
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                child: ListView.builder(
-                  itemCount: alldata.allcats.length,
-                  itemBuilder: (context, position) {
-                    return CategoryCard(
-                        categoryName: alldata.allcats[position].name,
-                        imageUrl: constant.CATEGORY_IMAGE +
-                            alldata.allcats[position].imageUrl,
-                        function: () async {
-                          print("Clicked");
-                          alldata.ClickedCat = CatItem(
-                            name: alldata.allcats[position].name,
-                            imageUrl: alldata.allcats[position].imageUrl,
-                            id: alldata.allcats[position].id,
-                          );
-                          print("Clicked cat name:" + alldata.ClickedCat.name);
+    return FutureBuilder(
+        future: allData.getAllFavImages(),
+        builder: (context, snapshot) {
+          List<ImageItem> dbImages = snapshot.data;
+          return Scaffold(
+            backgroundColor: widget.destination.color.withAlpha(50),
+            body: SafeArea(
+              child: Container(
+                child: Column(
+                  children: <Widget>[
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: allData.allCategories.length,
+                        itemBuilder: (context, position) {
+                          return CategoryCard(
+                              categoryName:
+                              allData.allCategories[position].name,
+                              imageUrl: constant.CATEGORY_IMAGE +
+                                  allData.allCategories[position].imageUrl,
+                              function: () async {
+                                allData.clickedCategory = CatItem(
+                                  name: allData.allCategories[position].name,
+                                  imageUrl:
+                                  allData.allCategories[position].imageUrl,
+                                  id: allData.allCategories[position].id,
+                                );
 
-                          Response response = await get(
-                            constant.CATEGORY_ITEM_URL +
-                                alldata.allcats[position].id.toString(),
-                          );
-                          print(constant.CATEGORY_ITEM_URL +
-                              alldata.allcats[position].id.toString());
-                          print(response.statusCode);
-                          Map _data = jsonDecode(response.body);
+                                Response response = await get(
+                                  constant.CATEGORY_ITEM_URL +
+                                      allData.allCategories[position].id
+                                          .toString(),
+                                );
 
-                          print(_data.isNotEmpty.toString());
-                          if (response.statusCode == 200) {
-                            try {
-                              for (var imageItem in _data['HDwallpaper']) {
-                                itemImage image = new itemImage();
-                                image.urlImage = imageItem['images'].toString();
-                                // print(image.urlImage);
-                                image.isfav = 0;
-                                image.CatName =
-                                    imageItem['cat_name'].toString();
-                                alldata.allImage.add(image);
-                              }
-                            } catch (e) {
-                              print("Clicked 0");
+                                Map _data = jsonDecode(response.body);
 
-                              Navigator.pop(context);
-                            }
-                            print("Clicked 1");
-                            Navigator.pop(context);
+                                if (response.statusCode == 200) {
+                                  for (var imageItem in _data['HDwallpaper']) {
+                                    ImageItem image = new ImageItem();
+                                    image.urlImage =
+                                        imageItem['images'].toString();
+                                    image.CatName =
+                                        imageItem['cat_name'].toString();
+                                    image.isfav = 0;
+                                    ImageItem isFavouriteCheck =
+                                    dbImages.firstWhere(
+                                            (user) =>
+                                        user.urlImage + user.CatName ==
+                                            image.urlImage + user.CatName,
+                                        orElse: () => null);
+                                    (isFavouriteCheck == null)
+                                        ? image.isfav = 0
+                                        : image.isfav = 1;
 
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => homepage(),
-                              ),
-                            );
-                          }
-                        });
-                  },
+                                    allData.allImages.add(image);
+                                  }
+                                  print("Clicked 1");
+                                  Navigator.pop(context);
+
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => HomePage(),
+                                    ),
+                                  );
+                                }
+                              });
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          );
+        });
   }
 }
 
@@ -122,30 +138,44 @@ class CategoryCard extends StatelessWidget {
         function();
       },
       child: Card(
-        color: Colors.grey.shade400,
         elevation: 5,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5.0),
+          borderRadius: BorderRadius.circular(15.0),
         ),
         child: Container(
           child: Column(
             children: <Widget>[
-              CachedNetworkImage(
-                imageUrl: imageUrl,
-                fit: BoxFit.cover,
-                errorWidget: (context, url, error) => Icon(Icons.error),
-                placeholder: (context, url) => Image.asset(
+              ClipRRect(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(15.0),
+                  topRight: Radius.circular(15.0),
+                ),
+                child: CachedNetworkImage(
+                  imageUrl: imageUrl,
+                  fit: BoxFit.cover,
+                  errorWidget: (context, url, error) =>
+                      Icon(
+                        Icons.error,
+                      ),
+                  placeholder: (context, url) =>
+                      Image.asset(
                     'assets/images/loading_book.gif',
-                    fit: BoxFit.fill),
+                        fit: BoxFit.fill,
+                      ),
+                ),
               ),
               Container(
                 width: double.infinity,
-                color: Colors.grey.shade400,
                 padding: EdgeInsets.all(5.0),
                 child: Text(
                   categoryName,
-                  style: kCategoryName,
                   textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.blueAccent,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: 1.0,
+                  ),
                 ),
               ),
             ],
@@ -156,28 +186,83 @@ class CategoryCard extends StatelessWidget {
   }
 }
 
-class TextPage extends StatefulWidget {
-  const TextPage({Key key, this.destination}) : super(key: key);
+class SettingsPage extends StatefulWidget {
+  const SettingsPage({Key key, this.destination}) : super(key: key);
 
   final Destination destination;
 
   @override
-  _TextPageState createState() => _TextPageState();
+  _SettingsPageState createState() => _SettingsPageState();
 }
 
-class _TextPageState extends State<TextPage> {
+class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final themeChange = Provider.of<DarkThemeProvider>(context);
     return Scaffold(
       backgroundColor: widget.destination.color.withAlpha(50),
-      body: Container(
-        child: Checkbox(
-            value: themeChange.darkTheme,
-            onChanged: (bool value) {
-              themeChange.darkTheme = value;
-            }),
+      body: Stack(
+        children: <Widget>[
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Switch(
+                    activeColor: Colors.blueAccent,
+                    value: themeChange.darkTheme,
+                    onChanged: (newValue) {
+                      setState(
+                            () {
+                          themeChange.darkTheme = newValue;
+                        },
+                      );
+                    },
+                  ),
+                  Text("Dark Mode"),
+                ],
+              ),
+              FacebookNativeAd(
+                placementId: "756894781441261_759233337874072",
+                adType: NativeAdType.NATIVE_BANNER_AD,
+                bannerAdSize: NativeBannerAdSize.HEIGHT_100,
+                width: double.infinity,
+                backgroundColor: Colors.blue,
+                titleColor: Colors.white,
+                descriptionColor: Colors.white,
+                buttonColor: Colors.deepPurple,
+                buttonTitleColor: Colors.white,
+                buttonBorderColor: Colors.white,
+                listener: (result, value) {
+                  print("Native Ad: $result --> $value");
+                },
+              ),
+              Container(
+                color: Colors.blueAccent.shade100,
+                child: ListTile(
+                  title: Text(
+                    "About The App",
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontFamily: "good2",
+                      fontWeight: FontWeight.w500,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    FacebookAudienceNetwork.init(
+      testingId: "2f289099-1391-45ba-b87d-4feb3a89b5d4",
     );
   }
 }
@@ -193,11 +278,43 @@ class _MasterPageState extends State<MasterPage> {
   int _currentIndex = 0;
 
   DarkThemeProvider themeChangeProvider = new DarkThemeProvider();
-
+  bool _isInterstitialAdLoaded = false;
+  bool _isRewardedAdLoaded = false;
+  bool _isRewardedVideoComplete = false;
   @override
   void initState() {
     super.initState();
     getCurrentAppTheme();
+    FacebookAudienceNetwork.init(
+      testingId: "2f289099-1391-45ba-b87d-4feb3a89b5d4",
+    );
+    _loadInterstitialAd();
+  }
+
+  _showInterstitialAd() {
+    if (_isInterstitialAdLoaded == true)
+      FacebookInterstitialAd.showInterstitialAd();
+    else
+      print("Interstial Ad not yet loaded!");
+  }
+
+  void _loadInterstitialAd() {
+    FacebookInterstitialAd.loadInterstitialAd(
+      placementId: constant.Interstitial,
+      listener: (result, value) {
+        print("Interstitial Ad: $result --> $value");
+        if (result == InterstitialAdResult.LOADED)
+          _isInterstitialAdLoaded = true;
+
+        /// Once an Interstitial Ad has been dismissed and becomes invalidated,
+        /// load a fresh Ad by calling this function.
+        if (result == InterstitialAdResult.DISMISSED &&
+            value["invalidated"] == true) {
+          _isInterstitialAdLoaded = false;
+          _loadInterstitialAd();
+        }
+      },
+    );
   }
 
   void getCurrentAppTheme() async {
@@ -218,6 +335,7 @@ class _MasterPageState extends State<MasterPage> {
 
   void pageChanged(int index) {
     setState(() {
+      _showInterstitialAd();
       _currentIndex = index;
       (_currentIndex == 0)
           ? title_string = "Categories"
@@ -240,6 +358,128 @@ class _MasterPageState extends State<MasterPage> {
           debugShowCheckedModeBanner: false,
           theme: Styles.themeData(themeChangeProvider.darkTheme, context),
           home: Scaffold(
+            drawer: Drawer(
+              // Add a ListView to the drawer. This ensures the user can scroll
+              // through the options in the drawer if there isn't enough vertical
+              // space to fit everything.
+              child: ListView(
+                // Important: Remove any padding from the ListView.
+                padding: EdgeInsets.zero,
+                children: <Widget>[
+                  DrawerHeader(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(
+                        sigmaX: 20,
+                        sigmaY: 20,
+                      ),
+                      child: Image.asset('assets/images/logo.png'),
+                    ),
+                  ),
+                  Card(
+                    child: ListTile(
+                      trailing: Icon(
+                        Icons.contact_mail,
+                        color: Colors.pink,
+                      ),
+                      title: Text(
+                        'Contact Us',
+                        style: TextStyle(color: Colors.pink),
+                      ),
+                      subtitle: Text(
+                        'Send Email To Support',
+                      ),
+                      onTap: () {
+                        launchURL(
+                            'mailto:khalid@gmail.com?subject=what is your subject&body=');
+                      },
+                    ),
+                  ),
+                  Card(
+                    child: ListTile(
+                      trailing: Image.asset(
+                        'assets/images/insta.png',
+                        width: 25,
+                        height: 30,
+                      ),
+                      title: Text(
+                        'Instagram',
+                        style: TextStyle(color: Colors.pink.shade600),
+                      ),
+                      subtitle: Text(
+                        'Flowing Us In Instagram',
+                      ),
+                      onTap: () {
+                        launchURL('http://instagram.com/Morning_friends');
+                      },
+                    ),
+                  ),
+                  Card(
+                    child: ListTile(
+                      trailing: Icon(
+                        Icons.more,
+                        color: Colors.indigo,
+                      ),
+                      title: Text(
+                        'More Apps',
+                        style: TextStyle(color: Colors.indigo),
+                      ),
+                      subtitle: Text(
+                        'Find More Apps',
+                      ),
+                      onTap: () {},
+                    ),
+                  ),
+                  Card(
+                    child: ListTile(
+                      trailing: Icon(
+                        Icons.share,
+                        color: Colors.orange,
+                      ),
+                      title: Text(
+                        'Share App',
+                        style: TextStyle(color: Colors.orange),
+                      ),
+                      subtitle: Text(
+                        'Share App With Your Friends',
+                      ),
+                      onTap: () {},
+                    ),
+                  ),
+                  Card(
+                    child: ListTile(
+                      trailing: Icon(
+                        Icons.insert_drive_file,
+                        color: Colors.green,
+                      ),
+                      title: Text(
+                        'Privacy Policy',
+                        style: TextStyle(color: Colors.green),
+                      ),
+                      subtitle: Text(
+                        'Read The Privacy Ploicy',
+                      ),
+                      onTap: () {},
+                    ),
+                  ),
+                  Card(
+                    child: ListTile(
+                      trailing: Icon(
+                        Icons.stars,
+                        color: Colors.purple,
+                      ),
+                      title: Text(
+                        'Rate Us',
+                        style: TextStyle(color: Colors.purple),
+                      ),
+                      subtitle: Text(
+                        'Rate This App In Play Store',
+                      ),
+                      onTap: () {},
+                    ),
+                  ),
+                ],
+              ),
+            ),
             appBar: AppBar(
               title: Text(title_string),
             ),
@@ -250,7 +490,7 @@ class _MasterPageState extends State<MasterPage> {
               },
               children: <Widget>[
                 RootPage(destination: allDestinations[0]),
-                TextPage(destination: allDestinations[1])
+                SettingsPage(destination: allDestinations[1])
               ],
             ),
             bottomNavigationBar: BottomNavigationBar(

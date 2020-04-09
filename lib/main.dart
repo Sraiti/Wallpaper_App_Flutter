@@ -1,35 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/screens/Home_Page.dart';
+import 'package:flutter_app/screens/ImagesViewer.dart';
 import 'package:flutter_app/screens/MasterScreen.dart';
-import 'package:flutter_app/screens/home_page.dart';
 import 'package:flutter_app/screens/splash.dart';
-import 'package:flutter_app/screens/wallpaper.dart';
+import 'package:flutter_app/util/DarkThemeProvider.dart';
+import 'package:flutter_app/util/Styles.dart';
+import 'package:provider/provider.dart';
 
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   // This widget is the root of your application.
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  DarkThemeProvider themeChangeProvider = new DarkThemeProvider();
+
+  void getCurrentAppTheme() async {
+    themeChangeProvider.darkTheme =
+    await themeChangeProvider.darkThemePreference.getTheme();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentAppTheme();
+  }
 
   @override
   Widget build(BuildContext context) {
-//    FacebookAudienceNetwork.init(
-//      testingId: "7a5e22d0-9161-43dc-bf61-ac9af0c6b11f",
-//    );
-//    OneSignal.shared.init("93a9b681-97bd-4fa8-af4c-c0f152cfeffa");
-//    OneSignal.shared
-//        .setInFocusDisplayType(OSNotificationDisplayType.notification);
-    return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: true,
-      theme: ThemeData(
-        brightness: Brightness.light,
-        primaryColor: Colors.red,
+    return ChangeNotifierProvider(
+      child: Consumer<DarkThemeProvider>(
+        builder: (BuildContext context,
+            value,
+            Widget child,) {
+          return MaterialApp(
+            title: 'Flutter Demo',
+            theme: Styles.themeData(themeChangeProvider.darkTheme, context),
+            initialRoute: Splash.id,
+            routes: {
+              Splash.id: (context) => Splash(),
+              HomePage.id: (context) => HomePage(),
+              ImagesViewer.id: (context) => ImagesViewer(),
+              MasterPage.id: (context) => MasterPage(),
+            },
+          );
+        },
       ),
-      initialRoute: splash.id,
-      routes: {
-        splash.id: (context) => splash(),
-        homepage.id: (context) => homepage(),
-        WallpaperPage.id: (context) => WallpaperPage(),
-        MasterPage.id: (context) => MasterPage(),
+      create: (BuildContext context) {
+        return themeChangeProvider;
       },
     );
   }
