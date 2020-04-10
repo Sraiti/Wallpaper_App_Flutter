@@ -13,6 +13,7 @@ import 'package:flutter_app/util/util.dart';
 import 'package:flutter_app/util/widgets.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'Home_Page.dart';
 
@@ -39,6 +40,84 @@ class RootPage extends StatefulWidget {
   _RootPageState createState() => _RootPageState();
 }
 
+Widget buildBottomSheet(BuildContext context) {
+  return DecoratedBox(
+    decoration: BoxDecoration(
+      gradient: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomRight,
+        stops: [
+          0.2,
+          1,
+        ],
+        colors: [Colors.blue.shade200, Colors.blueAccent.shade700],
+      ),
+    ),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Expanded(
+          child: NativeAd(),
+        ),
+        Text(
+          "Are You Sure You Want To Quit ?",
+          style: TextStyle(
+            fontSize: 16.0,
+            fontFamily: 'good2',
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            FlatButton.icon(
+              onPressed: () {
+                Navigator.pop(context, true);
+              },
+              label: Text(
+                'Exit',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              icon: Icon(
+                Icons.exit_to_app,
+                color: Colors.amber,
+              ),
+              color: Colors.black45,
+            ),
+            FlatButton.icon(
+              onPressed: () async {
+                String url = constant.prefixstore + constant.package;
+                if (await canLaunch(url)) {
+                  await launch(url);
+                } else {
+                  throw 'Could not launch $url';
+                }
+              },
+              label: Text(
+                'Rate',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              icon: Icon(
+                Icons.stars,
+                color: Colors.amber,
+              ),
+              color: Colors.black45,
+            ),
+          ],
+        )
+      ],
+    ),
+  );
+}
+
+Future<bool> _onBackPressed(BuildContext context) {
+  return showModalBottomSheet(context: context, builder: buildBottomSheet);
+}
+
 class _RootPageState extends State<RootPage> {
   DataManager allData = DataManager.getInstance();
 
@@ -46,81 +125,86 @@ class _RootPageState extends State<RootPage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: allData.getAllFavImages(),
-        builder: (context, snapshot) {
-          List<ImageItem> dbImages = snapshot.data;
-          return Scaffold(
-            backgroundColor: widget.destination.color.withAlpha(50),
-            body: SafeArea(
-              child: Container(
-                child: Column(
-                  children: <Widget>[
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: allData.allCategories.length,
-                        itemBuilder: (context, position) {
-                          return CategoryCard(
-                              categoryName:
-                              allData.allCategories[position].name,
-                              imageUrl: constant.CATEGORY_IMAGE +
-                                  allData.allCategories[position].imageUrl,
-                              function: () async {
-                                allData.clickedCategory = CatItem(
-                                  name: allData.allCategories[position].name,
-                                  imageUrl:
-                                  allData.allCategories[position].imageUrl,
-                                  id: allData.allCategories[position].id,
-                                );
-
-                                Response response = await get(
-                                  constant.CATEGORY_ITEM_URL +
-                                      allData.allCategories[position].id
-                                          .toString(),
-                                );
-
-                                Map _data = jsonDecode(response.body);
-
-                                if (response.statusCode == 200) {
-                                  for (var imageItem in _data['HDwallpaper']) {
-                                    ImageItem image = new ImageItem();
-                                    image.urlImage =
-                                        imageItem['images'].toString();
-                                    image.CatName =
-                                        imageItem['cat_name'].toString();
-                                    image.isfav = 0;
-                                    ImageItem isFavouriteCheck =
-                                    dbImages.firstWhere(
-                                            (user) =>
-                                        user.urlImage + user.CatName ==
-                                            image.urlImage + user.CatName,
-                                        orElse: () => null);
-                                    (isFavouriteCheck == null)
-                                        ? image.isfav = 0
-                                        : image.isfav = 1;
-
-                                    allData.allImages.add(image);
-                                  }
-                                  print("Clicked 1");
-                                  Navigator.pop(context);
-
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => HomePage(),
-                                    ),
+    return WillPopScope(
+      onWillPop: () => _onBackPressed(context),
+      child: Scaffold(
+        backgroundColor: widget.destination.color.withAlpha(50),
+        body: FutureBuilder(
+            future: allData.getAllFavImages(),
+            builder: (context, snapshot) {
+              List<ImageItem> dbImages = snapshot.data;
+              return SafeArea(
+                child: Container(
+                  child: Column(
+                    children: <Widget>[
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: allData.allCategories.length,
+                          itemBuilder: (context, position) {
+                            return CategoryCard(
+                                categoryName:
+                                    allData.allCategories[position].name,
+                                imageUrl: constant.CATEGORY_IMAGE +
+                                    allData.allCategories[position].imageUrl,
+                                function: () async {
+                                  allData.clickedCategory = CatItem(
+                                    name: allData.allCategories[position].name,
+                                    imageUrl: allData
+                                        .allCategories[position].imageUrl,
+                                    id: allData.allCategories[position].id,
                                   );
-                                }
-                              });
-                        },
+
+                                  Response response = await get(
+                                    constant.CATEGORY_ITEM_URL +
+                                        allData.allCategories[position].id
+                                            .toString(),
+                                  );
+
+                                  Map _data = jsonDecode(response.body);
+
+                                  if (response.statusCode == 200) {
+                                    for (var imageItem
+                                        in _data['HDwallpaper']) {
+                                      ImageItem image = new ImageItem();
+                                      image.urlImage =
+                                          imageItem['images'].toString();
+                                      image.CatName =
+                                          imageItem['cat_name'].toString();
+                                      image.isfav = 0;
+                                      ImageItem isFavouriteCheck =
+                                          dbImages.firstWhere(
+                                              (user) =>
+                                                  user.urlImage +
+                                                      user.CatName ==
+                                                  image.urlImage + user.CatName,
+                                              orElse: () => null);
+                                      (isFavouriteCheck == null)
+                                          ? image.isfav = 0
+                                          : image.isfav = 1;
+
+                                      allData.allImages.add(image);
+                                    }
+                                    print("Clicked 1");
+                                    //Navigator.pop(context);
+
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => HomePage(),
+                                      ),
+                                    );
+                                  }
+                                });
+                          },
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ),
-          );
-        });
+              );
+            }),
+      ),
+    );
   }
 }
 
@@ -154,15 +238,13 @@ class CategoryCard extends StatelessWidget {
                 child: CachedNetworkImage(
                   imageUrl: imageUrl,
                   fit: BoxFit.cover,
-                  errorWidget: (context, url, error) =>
-                      Icon(
-                        Icons.error,
-                      ),
-                  placeholder: (context, url) =>
-                      Image.asset(
+                  errorWidget: (context, url, error) => Icon(
+                    Icons.error,
+                  ),
+                  placeholder: (context, url) => Image.asset(
                     'assets/images/loading_book.gif',
-                        fit: BoxFit.fill,
-                      ),
+                    fit: BoxFit.fill,
+                  ),
                 ),
               ),
               Container(
@@ -214,7 +296,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     value: themeChange.darkTheme,
                     onChanged: (newValue) {
                       setState(
-                            () {
+                        () {
                           themeChange.darkTheme = newValue;
                         },
                       );
@@ -272,7 +354,7 @@ class _MasterPageState extends State<MasterPage> {
 
   void getCurrentAppTheme() async {
     themeChangeProvider.darkTheme =
-    await themeChangeProvider.darkThemePreference.getTheme();
+        await themeChangeProvider.darkThemePreference.getTheme();
   }
 
   void bottomTapped(int index) {
@@ -303,9 +385,11 @@ class _MasterPageState extends State<MasterPage> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      child: Consumer<DarkThemeProvider>(builder: (BuildContext context,
-          value,
-          Widget child,) {
+      child: Consumer<DarkThemeProvider>(builder: (
+        BuildContext context,
+        value,
+        Widget child,
+      ) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: Styles.themeData(themeChangeProvider.darkTheme, context),
