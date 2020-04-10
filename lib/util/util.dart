@@ -1,10 +1,14 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:facebook_audience_network/ad/ad_interstitial.dart';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/models/DataManager.dart';
+import 'package:flutter_app/models/cat.dart';
 import 'package:flutter_app/util/constant.dart';
+import 'package:http/http.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 bool saveImage(Map<String, dynamic> map) {
@@ -79,4 +83,24 @@ showInterstitialAd() {
     FacebookInterstitialAd.showInterstitialAd();
   else
     print("Interstial Ad not yet loaded!");
+}
+
+void getCategoriesData() async {
+  DataManager alldata = DataManager.getInstance();
+  Response responseCat = await get(constant.CATEGORY_URL);
+  Map _categories = jsonDecode(responseCat.body);
+
+  for (var catJson in _categories['HDwallpaper']) {
+    CatItem cat = new CatItem(
+      id: int.parse(catJson['cid']),
+      imageUrl: catJson['category_image'].toString(),
+      name: catJson['category_name'].toString(),
+    );
+
+    if (!alldata.allCategories.contains(cat)) {
+      alldata.allCategories.add(cat);
+      print("Cat Added ${cat.name} " +
+          alldata.allCategories.contains(cat).toString());
+    }
+  }
 }

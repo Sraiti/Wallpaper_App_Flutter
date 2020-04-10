@@ -1,11 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_app/models/DataManager.dart';
-import 'package:flutter_app/models/cat.dart';
 import 'package:flutter_app/screens/MasterScreen.dart';
 import 'package:flutter_app/util/constant.dart';
-import 'package:http/http.dart';
+import 'package:flutter_app/util/util.dart';
 import 'package:splashscreen/splashscreen.dart';
 
 class Splash extends StatefulWidget {
@@ -16,26 +12,6 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<Splash> {
-  void getCategoriesData() async {
-    DataManager alldata = DataManager.getInstance();
-    Response responseCat = await get(constant.CATEGORY_URL);
-    Map _categories = jsonDecode(responseCat.body);
-
-    for (var catJson in _categories['HDwallpaper']) {
-      CatItem cat = new CatItem(
-        id: int.parse(catJson['cid']),
-        imageUrl: catJson['category_image'].toString(),
-        name: catJson['category_name'].toString(),
-      );
-
-      if (!alldata.allCategories.contains(cat)) {
-        alldata.allCategories.add(cat);
-        print("Cat Added ${cat.name} " +
-            alldata.allCategories.contains(cat).toString());
-      }
-    }
-  }
-
   @override
   void initState() {
     super.initState();

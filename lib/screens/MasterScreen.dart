@@ -18,6 +18,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'Home_Page.dart';
 
 String title_string = "Categories";
+DataManager allData = DataManager.getInstance();
+String errorText = " ";
 
 class Destination {
   const Destination(this.title, this.icon, this.color);
@@ -119,8 +121,6 @@ Future<bool> _onBackPressed(BuildContext context) {
 }
 
 class _RootPageState extends State<RootPage> {
-  DataManager allData = DataManager.getInstance();
-
   DarkThemeProvider themeChangeProvider = new DarkThemeProvider();
 
   @override
@@ -133,7 +133,8 @@ class _RootPageState extends State<RootPage> {
             future: allData.getAllFavImages(),
             builder: (context, snapshot) {
               List<ImageItem> dbImages = snapshot.data;
-              return SafeArea(
+              return (allData.allCategories.isNotEmpty)
+                  ? SafeArea(
                 child: Container(
                   child: Column(
                     children: <Widget>[
@@ -143,15 +144,19 @@ class _RootPageState extends State<RootPage> {
                           itemBuilder: (context, position) {
                             return CategoryCard(
                                 categoryName:
-                                    allData.allCategories[position].name,
+                                allData.allCategories[position].name,
                                 imageUrl: constant.CATEGORY_IMAGE +
-                                    allData.allCategories[position].imageUrl,
+                                    allData
+                                        .allCategories[position].imageUrl,
                                 function: () async {
+                                  allData.deleteAllImages();
                                   allData.clickedCategory = CatItem(
-                                    name: allData.allCategories[position].name,
+                                    name: allData
+                                        .allCategories[position].name,
                                     imageUrl: allData
                                         .allCategories[position].imageUrl,
-                                    id: allData.allCategories[position].id,
+                                    id: allData
+                                        .allCategories[position].id,
                                   );
 
                                   Response response = await get(
@@ -164,20 +169,22 @@ class _RootPageState extends State<RootPage> {
 
                                   if (response.statusCode == 200) {
                                     for (var imageItem
-                                        in _data['HDwallpaper']) {
+                                    in _data['HDwallpaper']) {
                                       ImageItem image = new ImageItem();
                                       image.urlImage =
                                           imageItem['images'].toString();
                                       image.CatName =
-                                          imageItem['cat_name'].toString();
+                                          imageItem['cat_name']
+                                              .toString();
                                       image.isfav = 0;
                                       ImageItem isFavouriteCheck =
-                                          dbImages.firstWhere(
+                                      dbImages.firstWhere(
                                               (user) =>
-                                                  user.urlImage +
-                                                      user.CatName ==
-                                                  image.urlImage + user.CatName,
-                                              orElse: () => null);
+                                          user.urlImage +
+                                              user.CatName ==
+                                              image.urlImage +
+                                                  user.CatName,
+                                          orElse: () => null);
                                       (isFavouriteCheck == null)
                                           ? image.isfav = 0
                                           : image.isfav = 1;
@@ -187,6 +194,7 @@ class _RootPageState extends State<RootPage> {
                                     print("Clicked 1");
                                     //Navigator.pop(context);
 
+                                    Navigator.pop(context);
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -200,6 +208,39 @@ class _RootPageState extends State<RootPage> {
                       ),
                     ],
                   ),
+                ),
+              )
+                  : Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "Please Check Your Connection",
+                        style: TextStyle(fontSize: 20.0),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: FlatButton(
+                        color: Colors.blueAccent,
+                        onPressed: () {
+                          setState(
+                                () {
+                              getCategoriesData();
+                              errorText = "Please Try again;";
+                            },
+                          );
+                        },
+                        child: Container(
+                          child: Text("Try Again"),
+                        ),
+                      ),
+                    ),
+                    Text(errorText),
+                  ],
                 ),
               );
             }),

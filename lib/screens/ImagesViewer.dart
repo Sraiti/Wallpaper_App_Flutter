@@ -128,8 +128,7 @@ class _ImagesViewerState extends State<ImagesViewer> {
                       );
                     },
                     itemBuilder: (BuildContext context, int itemIndex) {
-                      return (constant.countNative % 10 != 0)
-                          ? Container(
+                      return Container(
                         margin: EdgeInsets.symmetric(horizontal: 0.0),
                         child: Hero(
                           tag: widget.images[itemIndex].urlImage +
@@ -140,8 +139,7 @@ class _ImagesViewerState extends State<ImagesViewer> {
                                 .size
                                 .width,
                             height: double.infinity,
-                            imageUrl:
-                            constant.SERVER_IMAGE_UPFOLDER_CATEGORY +
+                            imageUrl: constant.SERVER_IMAGE_UPFOLDER_CATEGORY +
                                 widget.images[itemIndex].CatName
                                     .replaceAll(' ', '%20') +
                                 '/' +
@@ -167,8 +165,7 @@ class _ImagesViewerState extends State<ImagesViewer> {
                                 ),
                           ),
                         ),
-                      )
-                          : NativeAd();
+                      );
                     },
                   ),
                   Positioned(
