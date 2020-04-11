@@ -8,12 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/data/dbManager.dart';
 import 'package:flutter_app/models/ImageItem.dart';
 import 'package:flutter_app/util/DarkThemeProvider.dart';
-import 'package:flutter_app/util/Styles.dart';
 import 'package:flutter_app/util/constant.dart';
 import 'package:flutter_app/util/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_downloader/image_downloader.dart';
-import 'package:provider/provider.dart';
 
 class ImagesViewer extends StatefulWidget {
   static const String id = "ImagesViewer";
@@ -96,267 +94,239 @@ class _ImagesViewerState extends State<ImagesViewer> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      child: Consumer<DarkThemeProvider>(
-        builder: (BuildContext context,
-            value,
-            Widget child,) {
-          return MaterialApp(
-            theme: Styles.themeData(themeChangeProvider.darkTheme, context),
-            home: Scaffold(
-              body: Stack(
-                children: <Widget>[
-                  PageView.builder(
-                    controller: PageController(
-                      initialPage: widget.imageID,
-                    ),
-                    itemCount: widget.images.length,
-                    onPageChanged: (newValue) {
-                      setState(
-                            () {
-                          constant.countNative++;
-                          widget.imageID = newValue;
-                          widget.images[widget.imageID].isfav == 1
-                              ? widget.isFav = true
-                              : widget.isFav = false;
-                          print("ISFAV : ${widget.isFav}");
+    return Scaffold(
+      body: Stack(
+        children: <Widget>[
+          PageView.builder(
+            controller: PageController(
+              initialPage: widget.imageID,
+            ),
+            itemCount: widget.images.length,
+            onPageChanged: (newValue) {
+              setState(
+                    () {
+                  constant.countNative++;
+                  widget.imageID = newValue;
+                  widget.images[widget.imageID].isfav == 1
+                      ? widget.isFav = true
+                      : widget.isFav = false;
+                  print("ISFAV : ${widget.isFav}");
 
-                          print(
-                              "widget.images[widget.imageID].isfav : ${widget
-                                  .images[widget.imageID].isfav}");
-                        },
-                      );
-                    },
-                    itemBuilder: (BuildContext context, int itemIndex) {
-                      return Container(
-                        margin: EdgeInsets.symmetric(horizontal: 0.0),
-                        child: Hero(
-                          tag: widget.images[itemIndex].urlImage +
-                              widget.images[itemIndex].CatName,
-                          child: CachedNetworkImage(
-                            width: MediaQuery
-                                .of(context)
-                                .size
-                                .width,
-                            height: double.infinity,
-                            imageUrl: constant.SERVER_IMAGE_UPFOLDER_CATEGORY +
-                                widget.images[itemIndex].CatName
-                                    .replaceAll(' ', '%20') +
-                                '/' +
-                                widget.images[itemIndex].urlImage,
-                            imageBuilder: (context, imageProvider) =>
-                                Container(
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: imageProvider,
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                ),
-                            placeholder: (context, url) =>
-                                Image.asset(
-                                  'assets/images/loading.png',
-                                  fit: BoxFit.cover,
-                                ),
-                            errorWidget: (context, url, error) =>
-                                Icon(
-                                  Icons.error,
-                                  color: Colors.white,
-                                ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                  Positioned(
-                    top: 28,
-                    left: 8,
-                    child: FloatingActionButton(
-                      tooltip: 'Close',
-                      child: Icon(
-                        Icons.clear,
-                        color: Colors.white,
-                      ),
-                      onPressed: () {
-                        print("close");
-                        Navigator.pop(context);
-                      },
-                      heroTag: 'close',
-                      mini: true,
-                      backgroundColor: Colors.white30,
-                    ),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      Stack(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(top: 25.0),
-                            child: Container(
-                              width: double.infinity,
-                              // height: MediaQuery.of(context).size.height - 200,
-                              decoration: BoxDecoration(
-                                color: Colors.lightBlueAccent,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(15.0),
-                                  topRight: Radius.circular(15.0),
-                                ),
-                              ),
-
-                              child: Column(
-                                children: <Widget>[
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      widget.isFav
-                                          ? IconButton(
-                                        icon: Icon(
-                                          Icons.favorite,
-                                          size: 35.0,
-                                        ),
-                                        color: Colors.red,
-                                        onPressed: () {
-                                          Fluttertoast.showToast(
-                                              msg:
-                                              "Deleted From Favorites",
-                                              toastLength:
-                                              Toast.LENGTH_SHORT,
-                                              gravity:
-                                              ToastGravity.CENTER,
-                                              timeInSecForIosWeb: 1,
-                                              backgroundColor: Colors.red,
-                                              textColor: Colors.white,
-                                              fontSize: 16.0);
-                                          setState(
-                                                () {
-                                              widget
-                                                  .images[widget.imageID]
-                                                  .isfav = 0;
-
-                                              widget.isFav = false;
-                                              imageDBController.deletefav(
-                                                widget.images[
-                                                widget.imageID],
-                                              );
-                                            },
-                                          );
-                                        },
-                                      )
-                                          : IconButton(
-                                        icon: Icon(Icons.favorite_border),
-                                        onPressed: () {
-                                          Fluttertoast.showToast(
-                                              msg: "Added To Favorites",
-                                              toastLength:
-                                              Toast.LENGTH_SHORT,
-                                              gravity:
-                                              ToastGravity.CENTER,
-                                              timeInSecForIosWeb: 1,
-                                              backgroundColor: Colors.red,
-                                              textColor: Colors.white,
-                                              fontSize: 16.0);
-                                          setState(
-                                                () {
-                                              widget.isFav = true;
-                                              widget
-                                                  .images[widget.imageID]
-                                                  .isfav = 1;
-                                              imageDBController.addToFav(
-                                                widget.images[
-                                                widget.imageID],
-                                              );
-                                            },
-                                          );
-                                        },
-                                      ),
-                                      IconButton(
-                                        icon: Icon(
-                                          Icons.file_download,
-                                          size: 35.0,
-                                        ),
-                                        onPressed: () async {
-                                          Fluttertoast.showToast(
-                                              msg: "Downloading... ",
-                                              toastLength: Toast.LENGTH_SHORT,
-                                              gravity: ToastGravity.CENTER,
-                                              timeInSecForIosWeb: 1,
-                                              backgroundColor: Colors.red,
-                                              textColor: Colors.white,
-                                              fontSize: 16.0);
-                                          setState(() async {
-                                            await ImageDownloader.downloadImage(
-                                              constant
-                                                  .SERVER_IMAGE_UPFOLDER_CATEGORY +
-                                                  widget.images[widget.imageID]
-                                                      .CatName
-                                                      .replaceAll(' ', '%20') +
-                                                  '/' +
-                                                  widget.images[widget.imageID]
-                                                      .urlImage,
-                                              destination:
-                                              AndroidDestinationType
-                                                  .directoryDownloads
-                                                ..subDirectory(
-                                                    "custom/sample.gif"),
-                                            );
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                  print(
+                      "widget.images[widget.imageID].isfav : ${widget
+                          .images[widget.imageID].isfav}");
+                },
+              );
+            },
+            itemBuilder: (BuildContext context, int itemIndex) {
+              return Container(
+                margin: EdgeInsets.symmetric(horizontal: 0.0),
+                child: Hero(
+                  tag: widget.images[itemIndex].urlImage +
+                      widget.images[itemIndex].CatName,
+                  child: CachedNetworkImage(
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width,
+                    height: double.infinity,
+                    imageUrl: constant.SERVER_IMAGE_UPFOLDER_CATEGORY +
+                        widget.images[itemIndex].CatName
+                            .replaceAll(' ', '%20') +
+                        '/' +
+                        widget.images[itemIndex].urlImage,
+                    imageBuilder: (context, imageProvider) =>
+                        Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.contain,
                             ),
                           ),
-                          Positioned(
-                            right: 16.0,
-                            top: 0.0,
-                            child: FloatingActionButton(
-                                tooltip: 'Set as Wallpaper',
-                                backgroundColor: Colors.white,
-                                child: Icon(
-                                  Icons.share,
-                                  color: Colors.black,
+                        ),
+                    placeholder: (context, url) =>
+                        Image.asset(
+                          'assets/images/loading.png',
+                          fit: BoxFit.cover,
+                        ),
+                    errorWidget: (context, url, error) =>
+                        Icon(
+                          Icons.error,
+                          color: Colors.white,
+                        ),
+                  ),
+                ),
+              );
+            },
+          ),
+          Positioned(
+            top: 28,
+            left: 8,
+            child: FloatingActionButton(
+              tooltip: 'Close',
+              child: Icon(
+                Icons.clear,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                print("close");
+                Navigator.pop(context);
+              },
+              heroTag: 'close',
+              mini: true,
+              backgroundColor: Colors.white30,
+            ),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Stack(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 25.0),
+                    child: Container(
+                      width: double.infinity,
+                      // height: MediaQuery.of(context).size.height - 200,
+                      decoration: BoxDecoration(
+                        color: Colors.lightBlueAccent,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(15.0),
+                          topRight: Radius.circular(15.0),
+                        ),
+                      ),
+
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              widget.isFav
+                                  ? IconButton(
+                                icon: Icon(
+                                  Icons.favorite,
+                                  size: 35.0,
+                                ),
+                                color: Colors.red,
+                                onPressed: () {
+                                  Fluttertoast.showToast(
+                                      msg: "Deleted From Favorites",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.CENTER,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor: Colors.red,
+                                      textColor: Colors.white,
+                                      fontSize: 16.0);
+                                  setState(
+                                        () {
+                                      widget.images[widget.imageID]
+                                          .isfav = 0;
+
+                                      widget.isFav = false;
+                                      imageDBController.deletefav(
+                                        widget.images[widget.imageID],
+                                      );
+                                    },
+                                  );
+                                },
+                              )
+                                  : IconButton(
+                                icon: Icon(Icons.favorite_border),
+                                onPressed: () {
+                                  Fluttertoast.showToast(
+                                      msg: "Added To Favorites",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.CENTER,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor: Colors.red,
+                                      textColor: Colors.white,
+                                      fontSize: 16.0);
+                                  setState(
+                                        () {
+                                      widget.isFav = true;
+                                      widget.images[widget.imageID]
+                                          .isfav = 1;
+                                      imageDBController.addToFav(
+                                        widget.images[widget.imageID],
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                              IconButton(
+                                icon: Icon(
+                                  Icons.file_download,
+                                  size: 35.0,
                                 ),
                                 onPressed: () async {
-                                  await _onsharePressed(context);
-                                  // print(res);
-                                  var request = await HttpClient().getUrl(
-                                    Uri.parse(
+                                  Fluttertoast.showToast(
+                                      msg: "Downloading... ",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.CENTER,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor: Colors.red,
+                                      textColor: Colors.white,
+                                      fontSize: 16.0);
+                                  setState(() async {
+                                    await ImageDownloader.downloadImage(
                                       constant.SERVER_IMAGE_UPFOLDER_CATEGORY +
                                           widget.images[widget.imageID].CatName
                                               .replaceAll(' ', '%20') +
                                           '/' +
                                           widget
                                               .images[widget.imageID].urlImage,
-                                    ),
-                                  );
-                                  var response = await request.close();
-                                  Uint8List bytes =
-                                  await consolidateHttpClientResponseBytes(
-                                      response);
-                                  await Share.file('ESYS AMLOG', 'amlog.gif',
-                                      bytes, 'image/gif',
-                                      text: 'More Photos => ' +
-                                          constant.prefixstore +
-                                          constant.package);
-                                  print("done");
-                                }),
-                          )
+                                      destination: AndroidDestinationType
+                                          .directoryDownloads
+                                        ..subDirectory("custom/sample.gif"),
+                                    );
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
                         ],
-                      )
-                    ],
+                      ),
+                    ),
                   ),
+                  Positioned(
+                    right: 16.0,
+                    top: 0.0,
+                    child: FloatingActionButton(
+                        tooltip: 'Set as Wallpaper',
+                        backgroundColor: Colors.white,
+                        child: Icon(
+                          Icons.share,
+                          color: Colors.black,
+                        ),
+                        onPressed: () async {
+                          await _onsharePressed(context);
+                          // print(res);
+                          var request = await HttpClient().getUrl(
+                            Uri.parse(
+                              constant.SERVER_IMAGE_UPFOLDER_CATEGORY +
+                                  widget.images[widget.imageID].CatName
+                                      .replaceAll(' ', '%20') +
+                                  '/' +
+                                  widget.images[widget.imageID].urlImage,
+                            ),
+                          );
+                          var response = await request.close();
+                          Uint8List bytes =
+                          await consolidateHttpClientResponseBytes(
+                              response);
+                          await Share.file(
+                              'ESYS AMLOG', 'amlog.gif', bytes, 'image/gif',
+                              text: 'More Photos => ' +
+                                  constant.prefixstore +
+                                  constant.package);
+                          print("done");
+                        }),
+                  )
                 ],
-              ),
-            ),
-          );
-        },
+              )
+            ],
+          ),
+        ],
       ),
-      create: (BuildContext context) {
-        return themeChangeProvider;
-      },
     );
   }
 }

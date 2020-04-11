@@ -6,6 +6,7 @@ import 'package:flutter_app/screens/MasterScreen.dart';
 import 'package:flutter_app/screens/splash.dart';
 import 'package:flutter_app/util/DarkThemeProvider.dart';
 import 'package:flutter_app/util/Styles.dart';
+import 'package:flutter_app/util/constant.dart';
 import 'package:provider/provider.dart';
 
 void main() => runApp(MyApp());
@@ -41,7 +42,7 @@ class _MyAppState extends State<MyApp> {
             value,
             Widget child,) {
           return MaterialApp(
-            title: 'Flutter Demo',
+            title: constant.nameApp,
             theme: Styles.themeData(themeChangeProvider.darkTheme, context),
             initialRoute: Splash.id,
             routes: {

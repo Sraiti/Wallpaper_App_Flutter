@@ -8,12 +8,9 @@ import 'package:flutter_app/models/ImageItem.dart';
 import 'package:flutter_app/screens/ImagesViewer.dart';
 import 'package:flutter_app/screens/MasterScreen.dart';
 import 'package:flutter_app/util/DarkThemeProvider.dart';
-import 'package:flutter_app/util/Styles.dart';
 import 'package:flutter_app/util/constant.dart';
 import 'package:flutter_app/util/util.dart';
 import 'package:flutter_app/util/widgets.dart';
-import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'Favorites_Page.dart';
 
@@ -61,175 +58,162 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
 //    nativeAd = NativeAd();
 //    _loadInter();
-    return ChangeNotifierProvider(
-      child: Consumer<DarkThemeProvider>(builder: (
-        BuildContext context,
-        value,
-        Widget child,
-      ) {
-        return MaterialApp(
-          theme: Styles.themeData(themeChangeProvider.darkTheme, context),
-          home: Scaffold(
-            drawer: Drawer(
-              // Add a ListView to the drawer. This ensures the user can scroll
-              // through the options in the drawer if there isn't enough vertical
-              // space to fit everything.
-              child: ListView(
-                // Important: Remove any padding from the ListView.
-                padding: EdgeInsets.zero,
-                children: <Widget>[
-                  DrawerHeader(
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(
-                        sigmaX: 20,
-                        sigmaY: 20,
-                      ),
-                      child: Image.asset('assets/images/logo.png'),
-                    ),
-                  ),
-                  Card(
-                    child: ListTile(
-                      trailing: Icon(
-                        Icons.contact_mail,
-                        color: Colors.pink,
-                      ),
-                      title: Text(
-                        'Contact Us',
-                        style: TextStyle(color: Colors.pink),
-                      ),
-                      subtitle: Text(
-                        'Send Email To Support',
-                      ),
-                      onTap: () {
-                        launchURL(
-                            'mailto:khalid@gmail.com?subject=what is your subject&body=');
-                      },
-                    ),
-                  ),
-                  Card(
-                    child: ListTile(
-                      trailing: Image.asset(
-                        'assets/images/insta.png',
-                        width: 25,
-                        height: 30,
-                      ),
-                      title: Text(
-                        'Instagram',
-                        style: TextStyle(color: Colors.pink.shade600),
-                      ),
-                      subtitle: Text(
-                        'Flowing Us In Instagram',
-                      ),
-                      onTap: () {
-                        launchURL('http://instagram.com/Morning_friends');
-                      },
-                    ),
-                  ),
-                  Card(
-                    child: ListTile(
-                      trailing: Icon(
-                        Icons.more,
-                        color: Colors.indigo,
-                      ),
-                      title: Text(
-                        'More Apps',
-                        style: TextStyle(color: Colors.indigo),
-                      ),
-                      subtitle: Text(
-                        'Find More Apps',
-                      ),
-                      onTap: () {},
-                    ),
-                  ),
-                  Card(
-                    child: ListTile(
-                      trailing: Icon(
-                        Icons.share,
-                        color: Colors.orange,
-                      ),
-                      title: Text(
-                        'Share App',
-                        style: TextStyle(color: Colors.orange),
-                      ),
-                      subtitle: Text(
-                        'Share App With Your Friends',
-                      ),
-                      onTap: () {},
-                    ),
-                  ),
-                  Card(
-                    child: ListTile(
-                      trailing: Icon(
-                        Icons.insert_drive_file,
-                        color: Colors.green,
-                      ),
-                      title: Text(
-                        'Privacy Policy',
-                        style: TextStyle(color: Colors.green),
-                      ),
-                      subtitle: Text(
-                        'Read The Privacy Ploicy',
-                      ),
-                      onTap: () {},
-                    ),
-                  ),
-                  Card(
-                    child: ListTile(
-                      trailing: Icon(
-                        Icons.stars,
-                        color: Colors.purple,
-                      ),
-                      title: Text(
-                        'Rate Us',
-                        style: TextStyle(color: Colors.purple),
-                      ),
-                      subtitle: Text(
-                        'Rate This App In Play Store',
-                      ),
-                      onTap: () {},
-                    ),
-                  ),
-                ],
+
+    return Scaffold(
+      drawer: Drawer(
+        // Add a ListView to the drawer. This ensures the user can scroll
+        // through the options in the drawer if there isn't enough vertical
+        // space to fit everything.
+        child: ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(
+                  sigmaX: 20,
+                  sigmaY: 20,
+                ),
+                child: Image.asset('assets/images/logo.png'),
               ),
             ),
-            body: SafeArea(
-              child: Column(
-                children: <Widget>[
-                  ShowMore(
-                    text: 'Favorites',
-                    haveButton: true,
-                    onTap: () {
-                      constant.countInter++;
-                      constant.countInter % 7 == 0
-                          ? showInterstitialAd()
-                          : Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Favorites(),
-                              ),
-                            );
-                    },
-                  ),
-                  FavoriteSlider(
-                    dataManger: alldata,
-                  ),
-                  facebookadBanner(),
-                  ShowMore(
-                    text: alldata.clickedCategory.name,
-                    haveButton: false,
-                  ),
-                  Latest(
-                    dataManger: alldata,
-                  ),
-                ],
+            Card(
+              child: ListTile(
+                trailing: Icon(
+                  Icons.contact_mail,
+                  color: Colors.pink,
+                ),
+                title: Text(
+                  'Contact Us',
+                  style: TextStyle(color: Colors.pink),
+                ),
+                subtitle: Text(
+                  'Send Email To Support',
+                ),
+                onTap: () {
+                  launchURL(
+                      'mailto:khalid@gmail.com?subject=what is your subject&body=');
+                },
               ),
             ),
-          ),
-        );
-      }),
-      create: (BuildContext context) {
-        return themeChangeProvider;
-      },
+            Card(
+              child: ListTile(
+                trailing: Image.asset(
+                  'assets/images/insta.png',
+                  width: 25,
+                  height: 30,
+                ),
+                title: Text(
+                  'Instagram',
+                  style: TextStyle(color: Colors.pink.shade600),
+                ),
+                subtitle: Text(
+                  'Flowing Us In Instagram',
+                ),
+                onTap: () {
+                  launchURL('http://instagram.com/Morning_friends');
+                },
+              ),
+            ),
+            Card(
+              child: ListTile(
+                trailing: Icon(
+                  Icons.more,
+                  color: Colors.indigo,
+                ),
+                title: Text(
+                  'More Apps',
+                  style: TextStyle(color: Colors.indigo),
+                ),
+                subtitle: Text(
+                  'Find More Apps',
+                ),
+                onTap: () {},
+              ),
+            ),
+            Card(
+              child: ListTile(
+                trailing: Icon(
+                  Icons.share,
+                  color: Colors.orange,
+                ),
+                title: Text(
+                  'Share App',
+                  style: TextStyle(color: Colors.orange),
+                ),
+                subtitle: Text(
+                  'Share App With Your Friends',
+                ),
+                onTap: () {},
+              ),
+            ),
+            Card(
+              child: ListTile(
+                trailing: Icon(
+                  Icons.insert_drive_file,
+                  color: Colors.green,
+                ),
+                title: Text(
+                  'Privacy Policy',
+                  style: TextStyle(color: Colors.green),
+                ),
+                subtitle: Text(
+                  'Read The Privacy Ploicy',
+                ),
+                onTap: () {},
+              ),
+            ),
+            Card(
+              child: ListTile(
+                trailing: Icon(
+                  Icons.stars,
+                  color: Colors.purple,
+                ),
+                title: Text(
+                  'Rate Us',
+                  style: TextStyle(color: Colors.purple),
+                ),
+                subtitle: Text(
+                  'Rate This App In Play Store',
+                ),
+                onTap: () {},
+              ),
+            ),
+          ],
+        ),
+      ),
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            ShowMore(
+              text: 'Favorites',
+              haveButton: true,
+              onTap: () {
+                constant.countInter++;
+                constant.countInter % 7 == 0
+                    ? showInterstitialAd()
+                    : Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Favorites(),
+                  ),
+                );
+              },
+            ),
+            FavoriteSlider(
+              dataManger: alldata,
+            ),
+            facebookadBanner(),
+            ShowMore(
+              text: alldata.clickedCategory.name,
+              haveButton: false,
+            ),
+            Latest(
+              dataManger: alldata,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
