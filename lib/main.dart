@@ -22,7 +22,7 @@ class _MyAppState extends State<MyApp> {
 
   void getCurrentAppTheme() async {
     themeChangeProvider.darkTheme =
-    await themeChangeProvider.darkThemePreference.getTheme();
+        await themeChangeProvider.darkThemePreference.getTheme();
   }
 
   @override
@@ -30,7 +30,7 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     getCurrentAppTheme();
     FacebookAudienceNetwork.init(
-      testingId: "f9505dcf-de56-4d78-bb83-2a452e02861f",
+      testingId: "12ca9d22-9667-4a96-98d0-70e26d118933",
     );
   }
 
@@ -38,9 +38,11 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       child: Consumer<DarkThemeProvider>(
-        builder: (BuildContext context,
-            value,
-            Widget child,) {
+        builder: (
+          BuildContext context,
+          value,
+          Widget child,
+        ) {
           return MaterialApp(
             title: constant.nameApp,
             theme: Styles.themeData(themeChangeProvider.darkTheme, context),

@@ -5,7 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/models/DataManager.dart';
 import 'package:flutter_app/models/ImageItem.dart';
-import 'package:flutter_app/models/cat.dart';
+import 'package:flutter_app/models/CatItem.dart';
 import 'package:flutter_app/util/DarkThemeProvider.dart';
 import 'package:flutter_app/util/constant.dart';
 import 'package:flutter_app/util/util.dart';
@@ -59,7 +59,7 @@ Widget buildBottomSheet(BuildContext context) {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Expanded(
-          child: NativeAd(),
+          child: getNativeFb(),
         ),
         Text(
           "Are You Sure You Want To Quit ?",
@@ -131,136 +131,122 @@ class _RootPageState extends State<RootPage> {
         body: FutureBuilder(
             future: allData.getAllFavImages(),
             builder: (context, snapshot) {
-              List<ImageItem> dbImages = snapshot.data;
               return (allData.allCategories.isNotEmpty)
                   ? SafeArea(
-                child: Container(
-                  child: Column(
-                    children: <Widget>[
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: allData.allCategories.length,
-                          itemBuilder: (context, position) {
-                            return CategoryCard(
-                                categoryName:
-                                allData.allCategories[position].name,
-                                imageUrl: constant.CATEGORY_IMAGE +
-                                    allData
-                                        .allCategories[position].imageUrl,
-                                function: () async {
-                                  allData.deleteAllImages();
-                                  allData.clickedCategory = CatItem(
-                                    name: allData
-                                        .allCategories[position].name,
-                                    imageUrl: allData
-                                        .allCategories[position].imageUrl,
-                                    id: allData
-                                        .allCategories[position].id,
-                                  );
+                      child: Container(
+                        child: Column(
+                          children: <Widget>[
+                            Expanded(
+                              child: ListView.builder(
+                                itemCount: allData.allCategories.length,
+                                itemBuilder: (context, position) {
+                                  return CategoryCard(
+                                      name: allData
+                                          .allCategories[position].categoryName,
+                                      image: constant.CATEGORY_IMAGE +
+                                          allData.allCategories[position]
+                                              .categoryImage,
+                                      function: () async {
+                                        allData.deleteAllImages();
 
-                                  Response response = await get(
-                                    constant.CATEGORY_ITEM_URL +
-                                        allData.allCategories[position].id
-                                            .toString(),
-                                  );
+                                        ///Getting  the name of the clicked Category To use it in Home Page In the Url
+                                        allData.clickedCategory =
+                                            allData.allCategories[position];
 
-                                  Map _data = jsonDecode(response.body);
+                                        if (snapshot.hasData) {
+                                          print("true");
+                                          print(snapshot.data);
+                                        } else {
+                                          print("False");
+                                        }
+                                        await getImagesData(
+                                            position, snapshot.data);
 
-                                  if (response.statusCode == 200) {
-                                    for (var imageItem
-                                    in _data['HDwallpaper']) {
-                                      ImageItem image = new ImageItem();
-                                      image.urlImage =
-                                          imageItem['images'].toString();
-                                      image.CatName =
-                                          imageItem['cat_name']
-                                              .toString();
-                                      image.isfav = 0;
-                                      ImageItem isFavouriteCheck =
-                                      dbImages.firstWhere(
-                                              (user) =>
-                                          user.urlImage +
-                                              user.CatName ==
-                                              image.urlImage +
-                                                  user.CatName,
-                                          orElse: () => null);
-                                      (isFavouriteCheck == null)
-                                          ? image.isfav = 0
-                                          : image.isfav = 1;
+                                        ///Dismissing the Downloading Dialog
+                                        Navigator.pop(context);
 
-                                      allData.allImages.add(image);
-                                    }
-                                    print("Clicked 1");
-                                    //Navigator.pop(context);
-
-                                    Navigator.pop(context);
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => HomePage(),
-                                      ),
-                                    );
-                                  }
-                                });
-                          },
+                                        ///Pushing new Page
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => HomePage(),
+                                          ),
+                                        );
+                                      });
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              )
+                    )
                   : Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "Please Check Your Connection",
-                        style: TextStyle(fontSize: 20.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Please Check Your Connection error: ${snapshot.error}",
+                              style: TextStyle(fontSize: 20.0),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: FlatButton(
+                              color: Colors.blueAccent,
+                              onPressed: () {
+                                setState(
+                                  () {
+                                    getCategoriesData();
+                                    errorText = "Please Try again;";
+                                  },
+                                );
+                              },
+                              child: Container(
+                                child: Text("Try Again"),
+                              ),
+                            ),
+                          ),
+                          Text(errorText),
+                        ],
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: FlatButton(
-                        color: Colors.blueAccent,
-                        onPressed: () {
-                          setState(
-                                () {
-                              getCategoriesData();
-                              errorText = "Please Try again;";
-                            },
-                          );
-                        },
-                        child: Container(
-                          child: Text("Try Again"),
-                        ),
-                      ),
-                    ),
-                    Text(errorText),
-                  ],
-                ),
-              );
+                    );
             }),
       ),
     );
   }
 }
+//
+//void Filter() async {
+//  List<ImageItem> dbImages = await allData.getAllFavImages();
+//  for (ImageItem item in allData.allImages) {
+//    ImageItem isFavouriteCheck = dbImages.firstWhere(
+//        (image) =>
+//            image.imageUrl + image.catName == image.imageUrl + image.catName,
+//        orElse: () => null);
+//    (isFavouriteCheck == null) ? imageItem.isfav = 0 : imageItem.isfav = 1;
+//  }
+//
+//  for (ImageItem i in dbImages) {
+//    print("dbImages ${i.imageUrl} is fav ${i.isfav}");
+//  }
+//}
 
 class CategoryCard extends StatelessWidget {
-  const CategoryCard({this.imageUrl, this.categoryName, this.function});
+  const CategoryCard({this.image, this.name, this.function});
 
-  final String imageUrl;
-  final String categoryName;
+  final String image;
+  final String name;
   final Function function;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
         showProgressDialog(context, "Downloading ...");
-        function();
+        await function();
       },
       child: Card(
         elevation: 5,
@@ -268,36 +254,31 @@ class CategoryCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(15.0),
         ),
         child: Container(
-          child: Column(
+          height: 150,
+          child: Stack(
             children: <Widget>[
               ClipRRect(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(15.0),
-                  topRight: Radius.circular(15.0),
-                ),
-                child: CachedNetworkImage(
-                  imageUrl: imageUrl,
-                  fit: BoxFit.cover,
-                  errorWidget: (context, url, error) => Icon(
-                    Icons.error,
+                borderRadius: BorderRadius.circular(15.0),
+                child: Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(5.0),
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(image),
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                  placeholder: (context, url) => Image.asset(
-                    'assets/images/loading_book.gif',
-                    fit: BoxFit.fill,
-                  ),
-                ),
-              ),
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(5.0),
-                child: Text(
-                  categoryName,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.blueAccent,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: 1.0,
+                  alignment: Alignment.center,
+                  child: Text(
+                    name,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 45.0,
+                      fontFamily: "good2",
+                      color: Colors.white,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 2.0,
+                    ),
                   ),
                 ),
               ),
@@ -345,7 +326,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   Text("Dark Mode"),
                 ],
               ),
-              NativeAd(),
+              getNativeFb(),
               Container(
                 color: Colors.blueAccent.shade100,
                 child: GestureDetector(
@@ -388,13 +369,7 @@ class _MasterPageState extends State<MasterPage> {
   @override
   void initState() {
     super.initState();
-    getCurrentAppTheme();
     loadInterstitialAd();
-  }
-
-  void getCurrentAppTheme() async {
-    themeChangeProvider.darkTheme =
-        await themeChangeProvider.darkThemePreference.getTheme();
   }
 
   void bottomTapped(int index) {
@@ -410,7 +385,9 @@ class _MasterPageState extends State<MasterPage> {
 
   void pageChanged(int index) {
     setState(() {
-      showInterstitialAd();
+      if (constant.countInter % 3 == 0) {
+        showInterstitialAd();
+      }
       _currentIndex = index;
       (_currentIndex == 0)
           ? title_string = "Categories"

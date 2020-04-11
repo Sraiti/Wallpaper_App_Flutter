@@ -24,22 +24,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   DataManager alldata = DataManager.getInstance();
 
-  ///Facebook ADS Stuff
-//  NativeAd nativeAd;
-//  bool isload = false;
-//
-//  FacebookInterstitialAd _loadInter() {
-//    FacebookInterstitialAd interstitialAd = FacebookInterstitialAd();
-//    FacebookInterstitialAd.loadInterstitialAd(
-//      placementId: constant.Interstitial,
-//      listener: (result, value) {
-//        if (result == InterstitialAdResult.LOADED) isload = true;
-//      },
-//    );
-//
-//    return interstitialAd;
-// }
-
   DarkThemeProvider themeChangeProvider = new DarkThemeProvider();
 
   @override
@@ -193,19 +177,19 @@ class _HomePageState extends State<HomePage> {
                 constant.countInter % 7 == 0
                     ? showInterstitialAd()
                     : Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Favorites(),
-                  ),
-                );
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Favorites(),
+                        ),
+                      );
               },
             ),
             FavoriteSlider(
               dataManger: alldata,
             ),
-            facebookadBanner(),
+            getBannerFB(),
             ShowMore(
-              text: alldata.clickedCategory.name,
+              text: alldata.clickedCategory.categoryName,
               haveButton: false,
             ),
             Latest(
@@ -274,10 +258,9 @@ class _FavoriteSliderState extends State<FavoriteSlider> {
                                           child: CachedNetworkImage(
                                             imageUrl: constant
                                                     .SERVER_IMAGE_UPFOLDER_CATEGORY +
-                                                images[itemIndex].CatName +
+                                                images[itemIndex].catName +
                                                 '/' +
-                                                snapshot
-                                                    .data[itemIndex].urlImage,
+                                                images[itemIndex].imageUrl,
                                             imageBuilder:
                                                 (context, imageProvider) =>
                                                     Container(
@@ -379,15 +362,15 @@ class Latest extends StatelessWidget {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(4.0),
                           child: Hero(
-                            tag: dataManger.allImages[index].urlImage +
-                                dataManger.allImages[index].CatName,
+                            tag: dataManger.allImages[index].imageUrl +
+                                dataManger.allImages[index].catName,
                             child: CachedNetworkImage(
                               imageUrl:
                                   constant.SERVER_IMAGE_UPFOLDER_CATEGORY +
-                                      dataManger.clickedCategory.name
+                                      dataManger.clickedCategory.categoryName
                                           .replaceAll(' ', '%20') +
                                       '/' +
-                                      dataManger.allImages[index].urlImage,
+                                      dataManger.allImages[index].imageUrl,
                               imageBuilder: (context, imageProvider) =>
                                   Container(
                                 decoration: BoxDecoration(

@@ -42,8 +42,8 @@ class DBHelper {
     for (int i = 0; i < list.length; i++) {
       ImageItem image = new ImageItem();
       //image.Id = list[i]['id'];
-      image.urlImage = list[i]['urlimage'];
-      image.CatName = list[i]['CatName'];
+      image.imageUrl = list[i]['urlimage'];
+      image.catName = list[i]['CatName'];
       image.isfav = list[i]['isfav'];
 
       favorites.add(image);
@@ -55,8 +55,7 @@ class DBHelper {
   void addToFavorites(ImageItem image) async {
     var dbConnection = await db;
     String query =
-        'INSERT INTO $Table_name (urlimage , isfav , CatName) VALUES(\'${image
-        .urlImage}\',${image.isfav},\'${image.CatName}\')';
+        'INSERT INTO $Table_name (urlimage , isfav , CatName) VALUES(\'${image.imageUrl}\',${image.isfav},\'${image.catName}\')';
     await dbConnection.rawInsert(query);
 
     /* await dbConnection.transaction((transaction) async {
@@ -67,10 +66,10 @@ class DBHelper {
   void deleteFromFavorites(ImageItem image) async {
     var dbConnection = await db;
     String query =
-        'DELETE FROM $Table_name where urlimage like \'${image.urlImage}\'';
+        'DELETE FROM $Table_name where urlimage like \'${image.imageUrl}\'';
     //await dbConnection.rawInsert(query);
     await dbConnection.transaction(
-          (transaction) async {
+      (transaction) async {
         return await transaction.rawQuery(query);
       },
     );

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -5,8 +6,9 @@ import 'package:facebook_audience_network/ad/ad_interstitial.dart';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/models/CatItem.dart';
 import 'package:flutter_app/models/DataManager.dart';
-import 'package:flutter_app/models/cat.dart';
+import 'package:flutter_app/models/ImageItem.dart';
 import 'package:flutter_app/util/constant.dart';
 import 'package:http/http.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -27,24 +29,23 @@ void showProgressDialog(BuildContext context, String message) {
   showDialog(
     context: context,
     useRootNavigator: false,
-    builder: (context) =>
-        Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.0),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Row(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: CircularProgressIndicator(),
-                ),
-                Text(message),
-              ],
+    builder: (context) => Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: CircularProgressIndicator(),
             ),
-          ),
+            Text(message),
+          ],
         ),
+      ),
+    ),
   );
 }
 
@@ -61,6 +62,7 @@ bool _isRewardedAdLoaded = false;
 bool _isRewardedVideoComplete = false;
 
 void loadInterstitialAd() {
+  print("load Inter");
   FacebookInterstitialAd.loadInterstitialAd(
     placementId: constant.Interstitial,
     listener: (result, value) {
@@ -79,6 +81,7 @@ void loadInterstitialAd() {
 }
 
 showInterstitialAd() {
+  print(_isInterstitialAdLoaded);
   if (_isInterstitialAdLoaded == true)
     FacebookInterstitialAd.showInterstitialAd();
   else
@@ -88,19 +91,22 @@ showInterstitialAd() {
 void getCategoriesData() async {
   DataManager alldata = DataManager.getInstance();
   Response responseCat = await get(constant.CATEGORY_URL);
-  Map _categories = jsonDecode(responseCat.body);
+  var _categories = jsonDecode(responseCat.body);
 
-  for (var catJson in _categories['HDwallpaper']) {
-    CatItem cat = new CatItem(
-      id: int.parse(catJson['cid']),
-      imageUrl: catJson['category_image'].toString(),
-      name: catJson['category_name'].toString(),
-    );
+  if (responseCat.statusCode == 200) {
+    CategoriesGrabber c = CategoriesGrabber.fromJson(_categories);
+    alldata.allCategories = c.categoriesList;
+  }
+}
 
-    if (!alldata.allCategories.contains(cat)) {
-      alldata.allCategories.add(cat);
-      print("Cat Added ${cat.name} " +
-          alldata.allCategories.contains(cat).toString());
-    }
+Future<void> getImagesData(int position, List<ImageItem> imagesDb) async {
+  DataManager allData = DataManager.getInstance();
+  Response response = await get(
+    constant.CATEGORY_ITEM_URL + allData.allCategories[position].cid.toString(),
+  );
+  var _data = jsonDecode(response.body);
+  if (response.statusCode == 200) {
+    ImagesGrabber images = ImagesGrabber.fromJson(_data, imagesDb);
+    allData.allImages = images.imagesList;
   }
 }

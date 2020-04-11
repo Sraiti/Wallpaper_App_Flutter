@@ -33,7 +33,7 @@ class _ImagesViewerState extends State<ImagesViewer> {
 
   void getCurrentAppTheme() async {
     themeChangeProvider.darkTheme =
-    await themeChangeProvider.darkThemePreference.getTheme();
+        await themeChangeProvider.darkThemePreference.getTheme();
   }
 
   @override
@@ -43,11 +43,6 @@ class _ImagesViewerState extends State<ImagesViewer> {
     widget.images[widget.imageID].isfav == 1
         ? widget.isFav = true
         : widget.isFav = false;
-
-    print("initstate All Images Members :");
-    for (ImageItem imageItem in widget.images) {
-      print("url : ${imageItem.urlImage} isfavourite ${imageItem.isfav}");
-    }
   }
 
   Widget buildBottomSheet(BuildContext context) {
@@ -59,7 +54,7 @@ class _ImagesViewerState extends State<ImagesViewer> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           Expanded(
-            child: NativeAd(),
+            child: getNativeFb(),
           ),
           Text(
             "Share Image with Your Friends",
@@ -104,7 +99,7 @@ class _ImagesViewerState extends State<ImagesViewer> {
             itemCount: widget.images.length,
             onPageChanged: (newValue) {
               setState(
-                    () {
+                () {
                   constant.countNative++;
                   widget.imageID = newValue;
                   widget.images[widget.imageID].isfav == 1
@@ -113,8 +108,7 @@ class _ImagesViewerState extends State<ImagesViewer> {
                   print("ISFAV : ${widget.isFav}");
 
                   print(
-                      "widget.images[widget.imageID].isfav : ${widget
-                          .images[widget.imageID].isfav}");
+                      "widget.images[widget.imageID].isfav : ${widget.images[widget.imageID].isfav}");
                 },
               );
             },
@@ -122,38 +116,32 @@ class _ImagesViewerState extends State<ImagesViewer> {
               return Container(
                 margin: EdgeInsets.symmetric(horizontal: 0.0),
                 child: Hero(
-                  tag: widget.images[itemIndex].urlImage +
-                      widget.images[itemIndex].CatName,
+                  tag: widget.images[itemIndex].imageUrl +
+                      widget.images[itemIndex].catName,
                   child: CachedNetworkImage(
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width,
+                    width: MediaQuery.of(context).size.width,
                     height: double.infinity,
                     imageUrl: constant.SERVER_IMAGE_UPFOLDER_CATEGORY +
-                        widget.images[itemIndex].CatName
+                        widget.images[itemIndex].catName
                             .replaceAll(' ', '%20') +
                         '/' +
-                        widget.images[itemIndex].urlImage,
-                    imageBuilder: (context, imageProvider) =>
-                        Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.contain,
-                            ),
-                          ),
+                        widget.images[itemIndex].imageUrl,
+                    imageBuilder: (context, imageProvider) => Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.contain,
                         ),
-                    placeholder: (context, url) =>
-                        Image.asset(
-                          'assets/images/loading.png',
-                          fit: BoxFit.cover,
-                        ),
-                    errorWidget: (context, url, error) =>
-                        Icon(
-                          Icons.error,
-                          color: Colors.white,
-                        ),
+                      ),
+                    ),
+                    placeholder: (context, url) => Image.asset(
+                      'assets/images/loading.png',
+                      fit: BoxFit.cover,
+                    ),
+                    errorWidget: (context, url, error) => Icon(
+                      Icons.error,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               );
@@ -202,56 +190,56 @@ class _ImagesViewerState extends State<ImagesViewer> {
                             children: <Widget>[
                               widget.isFav
                                   ? IconButton(
-                                icon: Icon(
-                                  Icons.favorite,
-                                  size: 35.0,
-                                ),
-                                color: Colors.red,
-                                onPressed: () {
-                                  Fluttertoast.showToast(
-                                      msg: "Deleted From Favorites",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.CENTER,
-                                      timeInSecForIosWeb: 1,
-                                      backgroundColor: Colors.red,
-                                      textColor: Colors.white,
-                                      fontSize: 16.0);
-                                  setState(
-                                        () {
-                                      widget.images[widget.imageID]
-                                          .isfav = 0;
+                                      icon: Icon(
+                                        Icons.favorite,
+                                        size: 35.0,
+                                      ),
+                                      color: Colors.red,
+                                      onPressed: () {
+                                        Fluttertoast.showToast(
+                                            msg: "Deleted From Favorites",
+                                            toastLength: Toast.LENGTH_SHORT,
+                                            gravity: ToastGravity.CENTER,
+                                            timeInSecForIosWeb: 1,
+                                            backgroundColor: Colors.red,
+                                            textColor: Colors.white,
+                                            fontSize: 16.0);
+                                        setState(
+                                          () {
+                                            widget.images[widget.imageID]
+                                                .isfav = 0;
 
-                                      widget.isFav = false;
-                                      imageDBController.deletefav(
-                                        widget.images[widget.imageID],
-                                      );
-                                    },
-                                  );
-                                },
-                              )
+                                            widget.isFav = false;
+                                            imageDBController.deletefav(
+                                              widget.images[widget.imageID],
+                                            );
+                                          },
+                                        );
+                                      },
+                                    )
                                   : IconButton(
-                                icon: Icon(Icons.favorite_border),
-                                onPressed: () {
-                                  Fluttertoast.showToast(
-                                      msg: "Added To Favorites",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.CENTER,
-                                      timeInSecForIosWeb: 1,
-                                      backgroundColor: Colors.red,
-                                      textColor: Colors.white,
-                                      fontSize: 16.0);
-                                  setState(
-                                        () {
-                                      widget.isFav = true;
-                                      widget.images[widget.imageID]
-                                          .isfav = 1;
-                                      imageDBController.addToFav(
-                                        widget.images[widget.imageID],
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
+                                      icon: Icon(Icons.favorite_border),
+                                      onPressed: () {
+                                        Fluttertoast.showToast(
+                                            msg: "Added To Favorites",
+                                            toastLength: Toast.LENGTH_SHORT,
+                                            gravity: ToastGravity.CENTER,
+                                            timeInSecForIosWeb: 1,
+                                            backgroundColor: Colors.red,
+                                            textColor: Colors.white,
+                                            fontSize: 16.0);
+                                        setState(
+                                          () {
+                                            widget.isFav = true;
+                                            widget.images[widget.imageID]
+                                                .isfav = 1;
+                                            imageDBController.addToFav(
+                                              widget.images[widget.imageID],
+                                            );
+                                          },
+                                        );
+                                      },
+                                    ),
                               IconButton(
                                 icon: Icon(
                                   Icons.file_download,
@@ -269,11 +257,11 @@ class _ImagesViewerState extends State<ImagesViewer> {
                                   setState(() async {
                                     await ImageDownloader.downloadImage(
                                       constant.SERVER_IMAGE_UPFOLDER_CATEGORY +
-                                          widget.images[widget.imageID].CatName
+                                          widget.images[widget.imageID].catName
                                               .replaceAll(' ', '%20') +
                                           '/' +
                                           widget
-                                              .images[widget.imageID].urlImage,
+                                              .images[widget.imageID].imageUrl,
                                       destination: AndroidDestinationType
                                           .directoryDownloads
                                         ..subDirectory("custom/sample.gif"),
@@ -303,16 +291,16 @@ class _ImagesViewerState extends State<ImagesViewer> {
                           var request = await HttpClient().getUrl(
                             Uri.parse(
                               constant.SERVER_IMAGE_UPFOLDER_CATEGORY +
-                                  widget.images[widget.imageID].CatName
+                                  widget.images[widget.imageID].catName
                                       .replaceAll(' ', '%20') +
                                   '/' +
-                                  widget.images[widget.imageID].urlImage,
+                                  widget.images[widget.imageID].imageUrl,
                             ),
                           );
                           var response = await request.close();
                           Uint8List bytes =
-                          await consolidateHttpClientResponseBytes(
-                              response);
+                              await consolidateHttpClientResponseBytes(
+                                  response);
                           await Share.file(
                               'ESYS AMLOG', 'amlog.gif', bytes, 'image/gif',
                               text: 'More Photos => ' +

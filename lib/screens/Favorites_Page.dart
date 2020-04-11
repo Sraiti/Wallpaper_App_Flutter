@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/models/DataManager.dart';
 import 'package:flutter_app/models/ImageItem.dart';
 import 'package:flutter_app/screens/ImagesViewer.dart';
 import 'package:flutter_app/util/constant.dart';
+import 'package:flutter_app/util/widgets.dart';
 
 class Favorites extends StatelessWidget {
   static final String id = "favorites";
@@ -18,7 +18,6 @@ class Favorites extends StatelessWidget {
         title: Text("Favorites List"),
       ),
       body: Container(
-        color: Colors.white,
         child: FutureBuilder(
           future: alldata.getAllFavImages(),
           builder: (context, snapshot) {
@@ -62,11 +61,10 @@ class GridViewFavorites extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                ImagesViewer(
-                                  images: allFavoriteImages,
-                                  imageID: index,
-                                ),
+                            builder: (context) => ImagesViewer(
+                              images: allFavoriteImages,
+                              imageID: index,
+                            ),
                           ),
                         );
                       },
@@ -80,25 +78,24 @@ class GridViewFavorites extends StatelessWidget {
                             borderRadius: BorderRadius.circular(4.0),
                             child: CachedNetworkImage(
                               imageUrl:
-                              constant.SERVER_IMAGE_UPFOLDER_CATEGORY +
-                                  allFavoriteImages[index].CatName +
-                                  '/' +
-                                  allFavoriteImages[index].urlImage,
+                                  constant.SERVER_IMAGE_UPFOLDER_CATEGORY +
+                                      allFavoriteImages[index].catName +
+                                      '/' +
+                                      allFavoriteImages[index].imageUrl,
                               imageBuilder: (context, imageProvider) =>
                                   Container(
-                                    height: 80,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: imageProvider,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                              placeholder: (context, url) =>
-                                  Image.asset(
-                                    'assets/images/loading.png',
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: imageProvider,
                                     fit: BoxFit.cover,
                                   ),
+                                ),
+                              ),
+                              placeholder: (context, url) => Image.asset(
+                                'assets/images/loading.png',
+                                fit: BoxFit.cover,
+                              ),
                               errorWidget: (context, url, error) =>
                                   Icon(Icons.error),
                             ),
@@ -119,21 +116,7 @@ class GridViewFavorites extends StatelessWidget {
                 ),
               ),
         Container(
-          child: FacebookNativeAd(
-            placementId: constant.BannerNative,
-            adType: NativeAdType.NATIVE_BANNER_AD,
-            bannerAdSize: NativeBannerAdSize.HEIGHT_100,
-            width: double.infinity,
-            backgroundColor: Colors.blue,
-            titleColor: Colors.white,
-            descriptionColor: Colors.white,
-            buttonColor: Colors.deepPurple,
-            buttonTitleColor: Colors.white,
-            buttonBorderColor: Colors.white,
-            listener: (result, value) {
-              print("Native Ad: $result --> $value");
-            },
-          ),
+          child: getBannerFB(),
         ),
       ],
     );
