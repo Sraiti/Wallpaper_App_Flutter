@@ -44,6 +44,7 @@ class _MyAppState extends State<MyApp> {
           Widget child,
         ) {
           return MaterialApp(
+            debugShowCheckedModeBanner: false,
             title: constant.nameApp,
             theme: Styles.themeData(themeChangeProvider.darkTheme, context),
             initialRoute: Splash.id,
