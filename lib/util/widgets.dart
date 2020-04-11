@@ -1,7 +1,10 @@
+import 'dart:ui';
+
 import 'package:facebook_audience_network/ad/ad_banner.dart';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/util/constant.dart';
+import 'package:flutter_app/util/util.dart';
 
 class ShowMore extends StatelessWidget {
   final String text;
@@ -21,11 +24,11 @@ class ShowMore extends StatelessWidget {
         children: <Widget>[
           haveButton
               ? IconButton(
-            icon: Icon(Icons.menu),
-            onPressed: () {
-              Scaffold.of(context).openDrawer();
-            },
-          )
+                  icon: Icon(Icons.menu),
+                  onPressed: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                )
               : Container(),
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -42,7 +45,7 @@ class ShowMore extends StatelessWidget {
           ),
           haveButton
               ? FlatButton(
-            color: Colors.black26,
+                  color: Colors.black26,
                   child: Text(
                     'Favorites',
                     style: TextStyle(
@@ -291,6 +294,129 @@ class ProgressWidget extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+}
+
+class MyDrawer extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      // Important: Remove any padding from the ListView.
+      padding: EdgeInsets.zero,
+      children: <Widget>[
+        DrawerHeader(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(
+              sigmaX: 20,
+              sigmaY: 20,
+            ),
+            child: Image.asset('assets/images/ic_launcher.png'),
+          ),
+        ),
+        Card(
+          child: ListTile(
+            trailing: Icon(
+              Icons.contact_mail,
+              color: Colors.pink,
+            ),
+            title: Text(
+              'Contact Us',
+              style: TextStyle(color: Colors.pink),
+            ),
+            subtitle: Text(
+              'Send Email To Support',
+            ),
+            onTap: () {
+              launchURL(
+                  'mailto:khalid@gmail.com?subject=what is your subject&body=');
+            },
+          ),
+        ),
+        Card(
+          child: ListTile(
+            trailing: Image.asset(
+              'assets/images/insta.png',
+              width: 25,
+              height: 30,
+            ),
+            title: Text(
+              'Instagram',
+              style: TextStyle(color: Colors.pink.shade600),
+            ),
+            subtitle: Text(
+              'Flowing Us In Instagram',
+            ),
+            onTap: () {
+              launchURL('http://instagram.com/Morning_friends');
+            },
+          ),
+        ),
+        Card(
+          child: ListTile(
+            trailing: Icon(
+              Icons.more,
+              color: Colors.indigo,
+            ),
+            title: Text(
+              'More Apps',
+              style: TextStyle(color: Colors.indigo),
+            ),
+            subtitle: Text(
+              'Find More Apps',
+            ),
+            onTap: () {},
+          ),
+        ),
+        Card(
+          child: ListTile(
+            trailing: Icon(
+              Icons.share,
+              color: Colors.orange,
+            ),
+            title: Text(
+              'Share App',
+              style: TextStyle(color: Colors.orange),
+            ),
+            subtitle: Text(
+              'Share App With Your Friends',
+            ),
+            onTap: () {},
+          ),
+        ),
+        Card(
+          child: ListTile(
+            trailing: Icon(
+              Icons.insert_drive_file,
+              color: Colors.green,
+            ),
+            title: Text(
+              'Privacy Policy',
+              style: TextStyle(color: Colors.green),
+            ),
+            subtitle: Text(
+              'Read The Privacy Ploicy',
+            ),
+            onTap: () {},
+          ),
+        ),
+        Card(
+          child: ListTile(
+            trailing: Icon(
+              Icons.stars,
+              color: Colors.purple,
+            ),
+            title: Text(
+              'Rate Us',
+              style: TextStyle(color: Colors.purple),
+            ),
+            subtitle: Text(
+              'Rate This App In Play Store',
+            ),
+            onTap: () {},
+          ),
+        ),
+      ],
     );
   }
 }
