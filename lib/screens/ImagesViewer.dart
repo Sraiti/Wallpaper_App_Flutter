@@ -105,10 +105,6 @@ class _ImagesViewerState extends State<ImagesViewer> {
                   widget.images[widget.imageID].isfav == 1
                       ? widget.isFav = true
                       : widget.isFav = false;
-                  print("ISFAV : ${widget.isFav}");
-
-                  print(
-                      "widget.images[widget.imageID].isfav : ${widget.images[widget.imageID].isfav}");
                 },
               );
             },

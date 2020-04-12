@@ -1,16 +1,11 @@
-import 'dart:convert';
 import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/models/DataManager.dart';
-import 'package:flutter_app/models/ImageItem.dart';
-import 'package:flutter_app/models/CatItem.dart';
 import 'package:flutter_app/util/DarkThemeProvider.dart';
 import 'package:flutter_app/util/constant.dart';
 import 'package:flutter_app/util/util.dart';
 import 'package:flutter_app/util/widgets.dart';
-import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -35,6 +30,7 @@ const List<Destination> allDestinations = <Destination>[
 
 class RootPage extends StatefulWidget {
   RootPage({this.destination});
+
   final Destination destination;
 
   @override
@@ -254,7 +250,7 @@ class CategoryCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(15.0),
         ),
         child: Container(
-          height: 150,
+          height: 100,
           child: Stack(
             children: <Widget>[
               ClipRRect(
@@ -273,9 +269,9 @@ class CategoryCard extends StatelessWidget {
                     name,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 45.0,
+                      fontSize: 30.0,
                       fontFamily: "good2",
-                      color: Colors.white,
+                      color: Colors.lightBlueAccent,
                       fontWeight: FontWeight.w900,
                       letterSpacing: 2.0,
                     ),
@@ -337,7 +333,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     title: Text(
                       "About The App",
                       style: TextStyle(
-                        fontSize: 25,
+                        fontSize: 20,
                         fontFamily: "good2",
                         fontWeight: FontWeight.w500,
                       ),

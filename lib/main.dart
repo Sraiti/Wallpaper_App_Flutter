@@ -30,7 +30,7 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     getCurrentAppTheme();
     FacebookAudienceNetwork.init(
-      testingId: "12ca9d22-9667-4a96-98d0-70e26d118933",
+      testingId: "cd1bf25e-68cc-45ab-ba89-4d3b9db5a288",
     );
   }
 

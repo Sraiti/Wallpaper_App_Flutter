@@ -34,7 +34,7 @@ class _SplashState extends State<Splash> {
             fontSize: 30.0,
           ),
         ),
-        image: Image.asset('assets/images/logo.png'),
+        image: Image.asset('assets/images/ic_launcher.png'),
         backgroundColor: Colors.white,
         styleTextUnderTheLoader: new TextStyle(
           fontWeight: FontWeight.bold,
@@ -56,7 +56,7 @@ class SplashBody extends StatelessWidget {
         width: double.infinity,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/images/splashimage.jpg"),
+            image: AssetImage("assets/images/ic_launcher.png"),
             fit: BoxFit.cover,
           ),
         ),

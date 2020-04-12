@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:facebook_audience_network/ad/ad_banner.dart';
+import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/util/constant.dart';
@@ -17,7 +17,7 @@ class ShowMore extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: Colors.lightBlue,
+        color: Colors.black12,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -36,7 +36,7 @@ class ShowMore extends StatelessWidget {
               text,
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 20.0,
+                fontSize: 16.0,
                 wordSpacing: 2.0,
                 fontFamily: 'good2',
                 fontWeight: FontWeight.bold,
@@ -47,11 +47,11 @@ class ShowMore extends StatelessWidget {
               ? FlatButton(
                   color: Colors.black26,
                   child: Text(
-                    'Favorites',
+                    'Show all favorites',
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
-                      fontSize: 15.0,
+                      fontSize: 10.0,
                       fontFamily: 'good2',
                     ),
                   ),
@@ -65,6 +65,32 @@ class ShowMore extends StatelessWidget {
 }
 
 Widget getBannerFB() {
+  return Container(
+    alignment: Alignment(0.5, 1),
+    child: FacebookBannerAd(
+      placementId: "YOUR_PLACEMENT_ID",
+      bannerSize: BannerSize.STANDARD,
+      listener: (result, value) {
+        switch (result) {
+          case BannerAdResult.ERROR:
+            print("Error: $value");
+            break;
+          case BannerAdResult.LOADED:
+            print("Loaded: $value");
+            break;
+          case BannerAdResult.CLICKED:
+            print("Clicked: $value");
+            break;
+          case BannerAdResult.LOGGING_IMPRESSION:
+            print("Logging Impression: $value");
+            break;
+        }
+      },
+    ),
+  );
+}
+
+Widget getNativeBannerFB() {
   return FacebookNativeAd(
     placementId: constant.BannerNative,
     adType: NativeAdType.NATIVE_BANNER_AD,
@@ -167,7 +193,10 @@ class MyDrawer extends StatelessWidget {
             subtitle: Text(
               'Find More Apps',
             ),
-            onTap: () {},
+            onTap: () {
+              launchURL(
+                  'https://play.google.com/store/apps/developer?id=Special+Ones+Group');
+            },
           ),
         ),
         Card(
@@ -183,7 +212,12 @@ class MyDrawer extends StatelessWidget {
             subtitle: Text(
               'Share App With Your Friends',
             ),
-            onTap: () {},
+            onTap: () {
+              Share.text(
+                  '分享应用',
+                  '最好的照片花和爱 => ${constant.prefixstore + constant.package}',
+                  'text/plain');
+            },
           ),
         ),
         Card(
@@ -199,7 +233,9 @@ class MyDrawer extends StatelessWidget {
             subtitle: Text(
               'Read The Privacy Ploicy',
             ),
-            onTap: () {},
+            onTap: () {
+              launchURL('http://dev3pro.com/index/privacy_policy.html');
+            },
           ),
         ),
         Card(
@@ -215,7 +251,9 @@ class MyDrawer extends StatelessWidget {
             subtitle: Text(
               'Rate This App In Play Store',
             ),
-            onTap: () {},
+            onTap: () {
+              launchURL(constant.prefixstore + constant.package);
+            },
           ),
         ),
       ],
