@@ -8,10 +8,7 @@ class CategoriesGrabber {
       categoriesList = new List<Category>();
       json['HDwallpaper'].forEach(
         (v) {
-          Category c = new Category.fromJson(v);
-          print("CategoryGrabber");
-          print(c.categoryName);
-          categoriesList.add(c);
+          categoriesList.add(new Category.fromJson(v));
         },
       );
     }
