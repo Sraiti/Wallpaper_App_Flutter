@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/util/constant.dart';
@@ -17,7 +16,7 @@ class ShowMore extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: Colors.black12,
+        color: Colors.lightBlue,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -36,7 +35,7 @@ class ShowMore extends StatelessWidget {
               text,
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 16.0,
+                fontSize: 20.0,
                 wordSpacing: 2.0,
                 fontFamily: 'good2',
                 fontWeight: FontWeight.bold,
@@ -47,11 +46,11 @@ class ShowMore extends StatelessWidget {
               ? FlatButton(
                   color: Colors.black26,
                   child: Text(
-                    'Show all favorites',
+                    'Favorites',
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
-                      fontSize: 10.0,
+                      fontSize: 15.0,
                       fontFamily: 'good2',
                     ),
                   ),
@@ -65,32 +64,6 @@ class ShowMore extends StatelessWidget {
 }
 
 Widget getBannerFB() {
-  return Container(
-    alignment: Alignment(0.5, 1),
-    child: FacebookBannerAd(
-      placementId: "YOUR_PLACEMENT_ID",
-      bannerSize: BannerSize.STANDARD,
-      listener: (result, value) {
-        switch (result) {
-          case BannerAdResult.ERROR:
-            print("Error: $value");
-            break;
-          case BannerAdResult.LOADED:
-            print("Loaded: $value");
-            break;
-          case BannerAdResult.CLICKED:
-            print("Clicked: $value");
-            break;
-          case BannerAdResult.LOGGING_IMPRESSION:
-            print("Logging Impression: $value");
-            break;
-        }
-      },
-    ),
-  );
-}
-
-Widget getNativeBannerFB() {
   return FacebookNativeAd(
     placementId: constant.BannerNative,
     adType: NativeAdType.NATIVE_BANNER_AD,
@@ -108,24 +81,6 @@ Widget getNativeBannerFB() {
   );
 }
 
-Widget getNativeFb() {
-  return FacebookNativeAd(
-    placementId: constant.BannerNative,
-    adType: NativeAdType.NATIVE_AD,
-    bannerAdSize: NativeBannerAdSize.HEIGHT_120,
-    width: double.infinity,
-    backgroundColor: Colors.deepPurple,
-    titleColor: Colors.white,
-    descriptionColor: Colors.white,
-    buttonColor: Colors.blue,
-    buttonTitleColor: Colors.white,
-    buttonBorderColor: Colors.white,
-    listener: (result, value) {
-      if (result == NativeAdResult.LOADED) {}
-    },
-  );
-}
-
 class MyDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -136,8 +91,8 @@ class MyDrawer extends StatelessWidget {
         DrawerHeader(
           child: BackdropFilter(
             filter: ImageFilter.blur(
-              sigmaX: 20,
-              sigmaY: 20,
+              sigmaX: 15,
+              sigmaY: 2,
             ),
             child: Image.asset('assets/images/ic_launcher.png'),
           ),
@@ -193,10 +148,7 @@ class MyDrawer extends StatelessWidget {
             subtitle: Text(
               'Find More Apps',
             ),
-            onTap: () {
-              launchURL(
-                  'https://play.google.com/store/apps/developer?id=Special+Ones+Group');
-            },
+            onTap: () {},
           ),
         ),
         Card(
@@ -212,12 +164,7 @@ class MyDrawer extends StatelessWidget {
             subtitle: Text(
               'Share App With Your Friends',
             ),
-            onTap: () {
-              Share.text(
-                  '分享应用',
-                  '最好的照片花和爱 => ${constant.prefixstore + constant.package}',
-                  'text/plain');
-            },
+            onTap: () {},
           ),
         ),
         Card(
@@ -233,9 +180,7 @@ class MyDrawer extends StatelessWidget {
             subtitle: Text(
               'Read The Privacy Ploicy',
             ),
-            onTap: () {
-              launchURL('http://dev3pro.com/index/privacy_policy.html');
-            },
+            onTap: () {},
           ),
         ),
         Card(
@@ -251,12 +196,85 @@ class MyDrawer extends StatelessWidget {
             subtitle: Text(
               'Rate This App In Play Store',
             ),
-            onTap: () {
-              launchURL(constant.prefixstore + constant.package);
-            },
+            onTap: () {},
           ),
         ),
       ],
+    );
+  }
+}
+
+class NativeAd extends StatefulWidget {
+  @override
+  _NativeAdState createState() => _NativeAdState();
+}
+
+class _NativeAdState extends State<NativeAd> {
+  Widget _nativeAd = Image.asset(
+    "assets/images/loading_book.gif",
+    fit: BoxFit.cover,
+  );
+
+  FacebookNativeAd FbNative;
+
+  FacebookNativeAd _loadad() {
+    FacebookNativeAd native = FacebookNativeAd(
+      placementId: constant.Native,
+      adType: NativeAdType.NATIVE_AD,
+      width: double.infinity,
+      height: 300,
+      backgroundColor: Colors.blue,
+      titleColor: Colors.white,
+      descriptionColor: Colors.white,
+      buttonColor: Colors.deepPurple,
+      buttonTitleColor: Colors.white,
+      buttonBorderColor: Colors.white,
+      listener: (result, value) {
+        print("Native Ad: $result --> $value");
+
+        switch (result) {
+          case NativeAdResult.ERROR:
+            // TODO: Handle this case.
+            setState(() {
+              _nativeAd = Center(
+                child: Text(
+                  "No ad To Show",
+                  style: TextStyle(
+                    fontSize: 17.0,
+                  ),
+                ),
+              );
+            });
+
+            break;
+          case NativeAdResult.LOADED:
+            // TODO: Handle this case.
+
+            break;
+          case NativeAdResult.CLICKED:
+            // TODO: Handle this case.
+            break;
+          case NativeAdResult.LOGGING_IMPRESSION:
+            setState(() {
+              _nativeAd = Text("loading");
+            });
+            break;
+          case NativeAdResult.MEDIA_DOWNLOADED:
+            print("==>NativeAdResult.loading");
+            break;
+        }
+      },
+    );
+
+    return native;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    //_nativeAd = ;
+
+    return Stack(
+      children: <Widget>[_nativeAd, _loadad()],
     );
   }
 }

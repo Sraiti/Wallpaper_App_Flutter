@@ -220,6 +220,12 @@ class Latest extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {
+                      print("HomePage Url");
+                      print(constant.SERVER_IMAGE_UPFOLDER_CATEGORY +
+                          dataManger.allImages[index].catName
+                              .replaceAll(' ', '%20') +
+                          '/' +
+                          dataManger.allImages[index].imageUrl);
                       constant.countInter++;
                       constant.countInter % 7 == 0
                           ? showInterstitialAd()

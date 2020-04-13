@@ -91,9 +91,9 @@ showInterstitialAd() {
 void getCategoriesData() async {
   DataManager alldata = DataManager.getInstance();
   Response responseCat = await get(constant.CATEGORY_URL);
-  var _categories = jsonDecode(responseCat.body);
 
   if (responseCat.statusCode == 200) {
+    var _categories = jsonDecode(responseCat.body);
     CategoriesGrabber c = CategoriesGrabber.fromJson(_categories);
     alldata.allCategories = c.categoriesList;
   }
@@ -104,8 +104,10 @@ Future<void> getImagesData(int position, List<ImageItem> imagesDb) async {
   Response response = await get(
     constant.CATEGORY_ITEM_URL + allData.allCategories[position].cid.toString(),
   );
-  var _data = jsonDecode(response.body);
+  print(constant.CATEGORY_ITEM_URL +
+      allData.allCategories[position].cid.toString());
   if (response.statusCode == 200) {
+    var _data = jsonDecode(response.body);
     ImagesGrabber images = ImagesGrabber.fromJson(_data, imagesDb);
     allData.allImages = images.imagesList;
   }

@@ -8,8 +8,20 @@ class ImagesGrabber {
       imagesList = new List<ImageItem>();
       json['HDwallpaper'].forEach(
         (v) {
+          ///Filtering The Data to see The Ones how's already exist in the sqllite Database
+          /// and make them Favored  by isfav=1
           ImageItem imageItem = new ImageItem.fromJson(v);
           imageItem.isfav = 0;
+          print("ImageGrabber");
+
+          ///decode Unicode String To proper String
+//          var parts = imageItem.catName.split('u')..removeAt(0);
+//          // map from hex string to code point int, and create string
+//          imageItem.catName = String.fromCharCodes(
+//            parts.map<int>((hex) => int.parse(hex, radix: 16)),
+//          );
+
+          print(imageItem.imageUrl);
           ImageItem isFavouriteCheck = dbImages.firstWhere(
               (image) =>
                   imageItem.imageUrl + imageItem.catName ==
