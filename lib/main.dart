@@ -34,7 +34,7 @@ class _MyAppState extends State<MyApp> {
         .setInFocusDisplayType(OSNotificationDisplayType.notification);
     getCurrentAppTheme();
     FacebookAudienceNetwork.init(
-      testingId: "35766a8-7a8f-4f20-a9ac-089b55b7df4d",
+      testingId: "1d6acf01-74e0-4608-bc91-8bf41100c519",
     );
   }
 

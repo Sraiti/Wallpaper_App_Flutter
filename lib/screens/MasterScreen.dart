@@ -30,89 +30,10 @@ const List<Destination> allDestinations = <Destination>[
 
 class RootPage extends StatefulWidget {
   RootPage({this.destination});
-
   final Destination destination;
 
   @override
   _RootPageState createState() => _RootPageState();
-}
-
-Widget buildBottomSheet(BuildContext context) {
-  return DecoratedBox(
-    decoration: BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomRight,
-        stops: [
-          0.2,
-          1,
-        ],
-        colors: [Colors.blue.shade200, Colors.blueAccent.shade700],
-      ),
-    ),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Expanded(
-          child: getNativeFb(),
-        ),
-        Text(
-          "Are You Sure You Want To Quit ?",
-          style: TextStyle(
-            fontSize: 16.0,
-            fontFamily: 'good2',
-          ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            FlatButton.icon(
-              onPressed: () {
-                Navigator.pop(context, true);
-              },
-              label: Text(
-                'Exit',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-              icon: Icon(
-                Icons.exit_to_app,
-                color: Colors.amber,
-              ),
-              color: Colors.black45,
-            ),
-            FlatButton.icon(
-              onPressed: () async {
-                String url = constant.prefixstore + constant.package;
-                if (await canLaunch(url)) {
-                  await launch(url);
-                } else {
-                  throw 'Could not launch $url';
-                }
-              },
-              label: Text(
-                'Rate',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-              icon: Icon(
-                Icons.stars,
-                color: Colors.amber,
-              ),
-              color: Colors.black45,
-            ),
-          ],
-        )
-      ],
-    ),
-  );
-}
-
-Future<bool> _onBackPressed(BuildContext context) {
-  return showModalBottomSheet(context: context, builder: buildBottomSheet);
 }
 
 class _RootPageState extends State<RootPage> {
@@ -120,115 +41,102 @@ class _RootPageState extends State<RootPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () => _onBackPressed(context),
-      child: Scaffold(
-        backgroundColor: widget.destination.color.withAlpha(50),
-        body: FutureBuilder(
-            future: allData.getAllFavImages(),
-            builder: (context, snapshot) {
-              return (allData.allCategories.isNotEmpty)
-                  ? SafeArea(
-                      child: Container(
-                        child: Column(
-                          children: <Widget>[
-                            Expanded(
-                              child: ListView.builder(
-                                itemCount: allData.allCategories.length,
-                                itemBuilder: (context, position) {
-                                  return CategoryCard(
-                                      name: allData
-                                          .allCategories[position].categoryName,
-                                      image: constant.CATEGORY_IMAGE +
-                                          allData.allCategories[position]
-                                              .categoryImage,
-                                      function: () async {
-                                        allData.deleteAllImages();
+    return Scaffold(
+      backgroundColor: widget.destination.color.withAlpha(50),
+      body: FutureBuilder(
+          future: allData.getAllFavImages(),
+          builder: (context, snapshot) {
+            return (allData.allCategories.isNotEmpty)
+                ? SafeArea(
+              child: Container(
+                child: Column(
+                  children: <Widget>[
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: allData.allCategories.length,
+                        itemBuilder: (context, position) {
+                          return CategoryCard(
+                              name: allData
+                                  .allCategories[position].categoryName,
+                              image: constant.CATEGORY_IMAGE +
+                                  allData.allCategories[position]
+                                      .categoryImage,
+                              function: () async {
+                                allData.deleteAllImages();
 
-                                        ///Getting  the name of the clicked Category To use it in Home Page In the Url
-                                        allData.clickedCategory =
-                                            allData.allCategories[position];
+                                ///Getting  the name of the clicked Category To use it in Home Page In the Url
+                                allData.clickedCategory =
+                                allData.allCategories[position];
 
-                                        if (snapshot.hasData) {
-                                          print("true");
-                                          print(snapshot.data);
-                                        } else {
-                                          print("False");
-                                        }
-                                        await getImagesData(
-                                            position, snapshot.data);
+                                print("MasterPage Url");
+                                print(constant.CATEGORY_IMAGE +
+                                    allData.allCategories[position]
+                                        .categoryImage);
 
-                                        ///Dismissing the Downloading Dialog
-                                        Navigator.pop(context);
+                                if (snapshot.hasData) {
+                                  print("true");
+                                  print(snapshot.data);
+                                } else {
+                                  print("False");
+                                }
+                                await getImagesData(
+                                    position, snapshot.data);
 
-                                        ///Pushing new Page
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => HomePage(),
-                                          ),
-                                        );
-                                      });
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  : Center(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "Please Check Your Connection",
-                              style: TextStyle(fontSize: 20.0),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: FlatButton(
-                              color: Colors.blueAccent,
-                              onPressed: () {
-                                setState(
-                                  () {
-                                    getCategoriesData();
-                                    errorText = "Please Try again;";
-                                  },
+                                ///Dismissing the Downloading Dialog
+                                Navigator.pop(context);
+
+                                ///Pushing new Page
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => HomePage(),
+                                  ),
                                 );
-                              },
-                              child: Container(
-                                child: Text("Try Again"),
-                              ),
-                            ),
-                          ),
-                          Text(errorText),
-                        ],
+                              });
+                        },
                       ),
-                    );
-            }),
-      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+                : Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "Please Check Your Connection",
+                      style: TextStyle(fontSize: 20.0),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: FlatButton(
+                      color: Colors.blueAccent,
+                      onPressed: () {
+                        setState(
+                              () {
+                            getCategoriesData();
+                            errorText = "Please Try again;";
+                          },
+                        );
+                      },
+                      child: Container(
+                        child: Text("Try Again"),
+                      ),
+                    ),
+                  ),
+                  Text(errorText),
+                ],
+              ),
+            );
+          }),
     );
   }
 }
-//
-//void Filter() async {
-//  List<ImageItem> dbImages = await allData.getAllFavImages();
-//  for (ImageItem item in allData.allImages) {
-//    ImageItem isFavouriteCheck = dbImages.firstWhere(
-//        (image) =>
-//            image.imageUrl + image.catName == image.imageUrl + image.catName,
-//        orElse: () => null);
-//    (isFavouriteCheck == null) ? imageItem.isfav = 0 : imageItem.isfav = 1;
-//  }
-//
-//  for (ImageItem i in dbImages) {
-//    print("dbImages ${i.imageUrl} is fav ${i.isfav}");
-//  }
-//}
 
 class CategoryCard extends StatelessWidget {
   const CategoryCard({this.image, this.name, this.function});
@@ -250,7 +158,7 @@ class CategoryCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(15.0),
         ),
         child: Container(
-          height: 100,
+          height: 150,
           child: Stack(
             children: <Widget>[
               ClipRRect(
@@ -269,9 +177,9 @@ class CategoryCard extends StatelessWidget {
                     name,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 30.0,
+                      fontSize: 45.0,
                       fontFamily: "good2",
-                      color: Colors.deepPurple,
+                      color: Colors.white,
                       fontWeight: FontWeight.w900,
                       letterSpacing: 2.0,
                     ),
@@ -322,7 +230,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   Text("Dark Mode"),
                 ],
               ),
-              getNativeFb(),
+              NativeAd(),
               Container(
                 color: Colors.blueAccent.shade100,
                 child: GestureDetector(
@@ -333,7 +241,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     title: Text(
                       "About The App",
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 25,
                         fontFamily: "good2",
                         fontWeight: FontWeight.w500,
                       ),
@@ -362,6 +270,84 @@ class _MasterPageState extends State<MasterPage> {
 
   DarkThemeProvider themeChangeProvider = new DarkThemeProvider();
 
+  Widget buildBottomSheet(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomRight,
+          stops: [
+            0.2,
+            1,
+          ],
+          colors: [Colors.blue.shade200, Colors.blueAccent.shade700],
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Expanded(
+            child: NativeAd(),
+          ),
+          Text(
+            "Are You Sure You Want To Quit ?",
+            style: TextStyle(
+              fontSize: 16.0,
+              fontFamily: 'good2',
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              FlatButton.icon(
+                onPressed: () {
+                  Navigator.pop(context, true);
+                },
+                label: Text(
+                  'Exit',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                icon: Icon(
+                  Icons.exit_to_app,
+                  color: Colors.amber,
+                ),
+                color: Colors.black45,
+              ),
+              FlatButton.icon(
+                onPressed: () async {
+                  String url = constant.prefixstore + constant.package;
+                  if (await canLaunch(url)) {
+                    await launch(url);
+                  } else {
+                    throw 'Could not launch $url';
+                  }
+                },
+                label: Text(
+                  'Rate',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                icon: Icon(
+                  Icons.stars,
+                  color: Colors.amber,
+                ),
+                color: Colors.black45,
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Future<bool> _onBackPressed(BuildContext context) {
+    return showModalBottomSheet(context: context, builder: buildBottomSheet);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -381,6 +367,7 @@ class _MasterPageState extends State<MasterPage> {
 
   void pageChanged(int index) {
     setState(() {
+      constant.countInter++;
       if (constant.countInter % 3 == 0) {
         showInterstitialAd();
       }
@@ -407,15 +394,18 @@ class _MasterPageState extends State<MasterPage> {
       appBar: AppBar(
         title: Text(title_string),
       ),
-      body: PageView(
-        controller: pageController,
-        onPageChanged: (index) {
-          pageChanged(index);
-        },
-        children: <Widget>[
-          RootPage(destination: allDestinations[0]),
-          SettingsPage(destination: allDestinations[1])
-        ],
+      body: WillPopScope(
+        onWillPop: () => _onBackPressed(context),
+        child: PageView(
+          controller: pageController,
+          onPageChanged: (index) {
+            pageChanged(index);
+          },
+          children: <Widget>[
+            RootPage(destination: allDestinations[0]),
+            SettingsPage(destination: allDestinations[1])
+          ],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,

@@ -54,7 +54,7 @@ class _ImagesViewerState extends State<ImagesViewer> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           Expanded(
-            child: getNativeFb(),
+            child: NativeAd(),
           ),
           Text(
             "Share Image with Your Friends",

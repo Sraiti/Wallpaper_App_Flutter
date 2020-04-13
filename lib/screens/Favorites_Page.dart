@@ -116,7 +116,7 @@ class GridViewFavorites extends StatelessWidget {
                 ),
               ),
         Container(
-          child: getNativeBannerFB(),
+          child: getBannerFB(),
         ),
       ],
     );
