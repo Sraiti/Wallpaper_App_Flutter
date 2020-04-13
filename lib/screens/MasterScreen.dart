@@ -271,7 +271,7 @@ class CategoryCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 30.0,
                       fontFamily: "good2",
-                      color: Colors.lightBlueAccent,
+                      color: Colors.deepPurple,
                       fontWeight: FontWeight.w900,
                       letterSpacing: 2.0,
                     ),

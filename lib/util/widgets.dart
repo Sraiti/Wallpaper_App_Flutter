@@ -114,14 +114,14 @@ Widget getNativeFb() {
     adType: NativeAdType.NATIVE_AD,
     bannerAdSize: NativeBannerAdSize.HEIGHT_120,
     width: double.infinity,
-    backgroundColor: Colors.blue,
+    backgroundColor: Colors.deepPurple,
     titleColor: Colors.white,
     descriptionColor: Colors.white,
-    buttonColor: Colors.deepPurple,
+    buttonColor: Colors.blue,
     buttonTitleColor: Colors.white,
     buttonBorderColor: Colors.white,
     listener: (result, value) {
-      print("Native Ad: $result --> $value");
+      if (result == NativeAdResult.LOADED) {}
     },
   );
 }

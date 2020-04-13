@@ -158,7 +158,7 @@ class _ImagesViewerState extends State<ImagesViewer> {
               },
               heroTag: 'close',
               mini: true,
-              backgroundColor: Colors.white30,
+              backgroundColor: Colors.black54,
             ),
           ),
           Column(
@@ -172,7 +172,7 @@ class _ImagesViewerState extends State<ImagesViewer> {
                       width: double.infinity,
                       // height: MediaQuery.of(context).size.height - 200,
                       decoration: BoxDecoration(
-                        color: Colors.lightBlueAccent,
+                        color: Colors.black54,
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(15.0),
                           topRight: Radius.circular(15.0),
@@ -188,9 +188,9 @@ class _ImagesViewerState extends State<ImagesViewer> {
                                   ? IconButton(
                                       icon: Icon(
                                         Icons.favorite,
-                                        size: 35.0,
+                                        size: 30.0,
                                       ),
-                                      color: Colors.red,
+                                      color: Colors.pink,
                                       onPressed: () {
                                         Fluttertoast.showToast(
                                             msg: "Deleted From Favorites",
@@ -215,6 +215,7 @@ class _ImagesViewerState extends State<ImagesViewer> {
                                     )
                                   : IconButton(
                                       icon: Icon(Icons.favorite_border),
+                                      color: Colors.pink,
                                       onPressed: () {
                                         Fluttertoast.showToast(
                                             msg: "Added To Favorites",
@@ -239,7 +240,8 @@ class _ImagesViewerState extends State<ImagesViewer> {
                               IconButton(
                                 icon: Icon(
                                   Icons.file_download,
-                                  size: 35.0,
+                                  size: 25.0,
+                                  color: Colors.white,
                                 ),
                                 onPressed: () async {
                                   Fluttertoast.showToast(
@@ -279,7 +281,7 @@ class _ImagesViewerState extends State<ImagesViewer> {
                         backgroundColor: Colors.white,
                         child: Icon(
                           Icons.share,
-                          color: Colors.black,
+                          color: Colors.deepPurple,
                         ),
                         onPressed: () async {
                           await _onsharePressed(context);

@@ -7,6 +7,7 @@ import 'package:flutter_app/screens/splash.dart';
 import 'package:flutter_app/util/DarkThemeProvider.dart';
 import 'package:flutter_app/util/Styles.dart';
 import 'package:flutter_app/util/constant.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 
 void main() => runApp(MyApp());
@@ -28,9 +29,12 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    OneSignal.shared.init("93a9b681-97bd-4fa8-af4c-c0f152cfeffa");
+    OneSignal.shared
+        .setInFocusDisplayType(OSNotificationDisplayType.notification);
     getCurrentAppTheme();
     FacebookAudienceNetwork.init(
-      testingId: "cd1bf25e-68cc-45ab-ba89-4d3b9db5a288",
+      testingId: "35766a8-7a8f-4f20-a9ac-089b55b7df4d",
     );
   }
 
