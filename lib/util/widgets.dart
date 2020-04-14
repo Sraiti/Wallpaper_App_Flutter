@@ -237,9 +237,11 @@ class NativeAd extends StatefulWidget {
 }
 
 class _NativeAdState extends State<NativeAd> {
-  Widget _nativeAd = Image.asset(
-    "assets/images/loading_book.gif",
-    fit: BoxFit.cover,
+  Widget _nativeAd = Container(
+    alignment: Alignment.center,
+    child: CircularProgressIndicator(
+      backgroundColor: Colors.white70,
+    ),
   );
 
   FacebookNativeAd FbNative;
