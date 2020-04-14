@@ -54,6 +54,8 @@ class constant {
   static final String package = "com.wallchina.flowers";
 
   static final String fjhg = "Bom Dia";
+
+  static final String lhlk = "Bom Dia";
   // banner
   static final String banner = "756894781441261_758902417907164";
 
