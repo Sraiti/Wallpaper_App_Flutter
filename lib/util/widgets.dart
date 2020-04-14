@@ -16,7 +16,7 @@ class ShowMore extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: Colors.lightBlue,
+        color: Colors.black54,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -35,7 +35,8 @@ class ShowMore extends StatelessWidget {
               text,
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 20.0,
+                color: Colors.white,
+                fontSize: 18.0,
                 wordSpacing: 2.0,
                 fontFamily: 'good2',
                 fontWeight: FontWeight.bold,
@@ -44,13 +45,13 @@ class ShowMore extends StatelessWidget {
           ),
           haveButton
               ? FlatButton(
-                  color: Colors.black26,
+                  color: Colors.white70,
                   child: Text(
-                    'Favorites',
+                    'Show All',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.black54,
                       fontWeight: FontWeight.w600,
-                      fontSize: 15.0,
+                      fontSize: 12.0,
                       fontFamily: 'good2',
                     ),
                   ),
@@ -64,6 +65,32 @@ class ShowMore extends StatelessWidget {
 }
 
 Widget getBannerFB() {
+  return Container(
+    alignment: Alignment(0.5, 1),
+    child: FacebookBannerAd(
+      placementId: "YOUR_PLACEMENT_ID",
+      bannerSize: BannerSize.STANDARD,
+      listener: (result, value) {
+        switch (result) {
+          case BannerAdResult.ERROR:
+            print("Error: $value");
+            break;
+          case BannerAdResult.LOADED:
+            print("Loaded: $value");
+            break;
+          case BannerAdResult.CLICKED:
+            print("Clicked: $value");
+            break;
+          case BannerAdResult.LOGGING_IMPRESSION:
+            print("Logging Impression: $value");
+            break;
+        }
+      },
+    ),
+  );
+}
+
+Widget getNativeBannerFB() {
   return FacebookNativeAd(
     placementId: constant.BannerNative,
     adType: NativeAdType.NATIVE_BANNER_AD,
@@ -91,8 +118,8 @@ class MyDrawer extends StatelessWidget {
         DrawerHeader(
           child: BackdropFilter(
             filter: ImageFilter.blur(
-              sigmaX: 15,
-              sigmaY: 2,
+              sigmaX: 10,
+              sigmaY: 10,
             ),
             child: Image.asset('assets/images/ic_launcher.png'),
           ),
@@ -234,7 +261,7 @@ class _NativeAdState extends State<NativeAd> {
 
         switch (result) {
           case NativeAdResult.ERROR:
-          // TODO: Handle this case.
+            // TODO: Handle this case.
             setState(() {
               _nativeAd = Center(
                 child: Text(
@@ -248,11 +275,11 @@ class _NativeAdState extends State<NativeAd> {
 
             break;
           case NativeAdResult.LOADED:
-          // TODO: Handle this case.
+            // TODO: Handle this case.
 
             break;
           case NativeAdResult.CLICKED:
-          // TODO: Handle this case.
+            // TODO: Handle this case.
             break;
           case NativeAdResult.LOGGING_IMPRESSION:
             setState(() {
