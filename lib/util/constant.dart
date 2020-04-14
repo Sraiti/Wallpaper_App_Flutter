@@ -55,7 +55,7 @@ class constant {
 
   static final String fjhg = "Bom Dia";
 
-  static final String lhlk = "Bom Dia";
+  static final String lhlk = "Bom bdhfdfh";
   // banner
   static final String banner = "756894781441261_758902417907164";
 
