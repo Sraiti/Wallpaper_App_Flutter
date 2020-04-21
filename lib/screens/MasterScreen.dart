@@ -48,91 +48,91 @@ class _RootPageState extends State<RootPage> {
           builder: (context, snapshot) {
             return (allData.allCategories.isNotEmpty)
                 ? SafeArea(
-              child: Container(
-                child: Column(
-                  children: <Widget>[
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: allData.allCategories.length,
-                        itemBuilder: (context, position) {
-                          return CategoryCard(
-                              name: allData
-                                  .allCategories[position].categoryName,
-                              image: constant.CATEGORY_IMAGE +
-                                  allData.allCategories[position]
-                                      .categoryImage,
-                              function: () async {
-                                allData.deleteAllImages();
+                    child: Container(
+                      child: Column(
+                        children: <Widget>[
+                          Expanded(
+                            child: ListView.builder(
+                              itemCount: allData.allCategories.length,
+                              itemBuilder: (context, position) {
+                                return CategoryCard(
+                                    name: allData
+                                        .allCategories[position].categoryName,
+                                    image: constant.CATEGORY_IMAGE +
+                                        allData.allCategories[position]
+                                            .categoryImage,
+                                    function: () async {
+                                      allData.deleteAllImages();
 
-                                ///Getting  the name of the clicked Category To use it in Home Page In the Url
-                                allData.clickedCategory =
-                                allData.allCategories[position];
+                                      ///Getting  the name of the clicked Category To use it in Home Page In the Url
+                                      allData.clickedCategory =
+                                          allData.allCategories[position];
 
-                                print("MasterPage Url");
-                                print(constant.CATEGORY_IMAGE +
-                                    allData.allCategories[position]
-                                        .categoryImage);
+                                      print("MasterPage Url");
+                                      print(constant.CATEGORY_IMAGE +
+                                          allData.allCategories[position]
+                                              .categoryImage);
 
-                                if (snapshot.hasData) {
-                                  print("true");
-                                  print(snapshot.data);
-                                } else {
-                                  print("False");
-                                }
-                                await getImagesData(
-                                    position, snapshot.data);
+                                      if (snapshot.hasData) {
+                                        print("true");
+                                        print(snapshot.data);
+                                      } else {
+                                        print("False");
+                                      }
+                                      await getImagesData(
+                                          position, snapshot.data);
 
-                                ///Dismissing the Downloading Dialog
-                                Navigator.pop(context);
+                                      ///Dismissing the Downloading Dialog
+                                      Navigator.pop(context);
 
-                                ///Pushing new Page
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => HomePage(),
-                                  ),
-                                );
-                              });
-                        },
+                                      ///Pushing new Page
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => HomePage(),
+                                        ),
+                                      );
+                                    });
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-            )
+                  )
                 : Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      "Please Check Your Connection",
-                      style: TextStyle(fontSize: 20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Please Check Your Connection",
+                            style: TextStyle(fontSize: 20.0),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: FlatButton(
+                            color: Colors.blueAccent,
+                            onPressed: () {
+                              setState(
+                                () {
+                                  getCategoriesData();
+                                  errorText = "Please Try again;";
+                                },
+                              );
+                            },
+                            child: Container(
+                              child: Text("Try Again"),
+                            ),
+                          ),
+                        ),
+                        Text(errorText),
+                      ],
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: FlatButton(
-                      color: Colors.blueAccent,
-                      onPressed: () {
-                        setState(
-                              () {
-                            getCategoriesData();
-                            errorText = "Please Try again;";
-                          },
-                        );
-                      },
-                      child: Container(
-                        child: Text("Try Again"),
-                      ),
-                    ),
-                  ),
-                  Text(errorText),
-                ],
-              ),
-            );
+                  );
           }),
     );
   }
@@ -238,6 +238,9 @@ class _SettingsPageState extends State<SettingsPage> {
                     launchURL(constant.aboutUrl);
                   },
                   child: ListTile(
+                    onTap: () {
+                      launchURL('http://dev3pro.com/index/privacy_policy.html');
+                    },
                     title: Text(
                       "About The App",
                       style: TextStyle(

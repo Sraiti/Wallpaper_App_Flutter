@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/util/constant.dart';
@@ -139,7 +140,7 @@ class MyDrawer extends StatelessWidget {
             ),
             onTap: () {
               launchURL(
-                  'mailto:khalid@gmail.com?subject=what is your subject&body=');
+                  'mailto:specialonesteam@gmail.com?subject=what is your subject&body=');
             },
           ),
         ),
@@ -176,7 +177,8 @@ class MyDrawer extends StatelessWidget {
               'Find More Apps',
             ),
             onTap: () {
-              launchURL('http://instagram.com/Morning_friends');
+              launchURL(
+                  'https://play.google.com/store/apps/developer?id=Special+Ones+Group');
             },
           ),
         ),
@@ -194,7 +196,10 @@ class MyDrawer extends StatelessWidget {
               'Share App With Your Friends',
             ),
             onTap: () {
-              launchURL('http://instagram.com/Morning_friends');
+              Share.text(
+                  'Share in ...',
+                  'best app for photos download it now ${constant.prefixstore + constant.package}',
+                  'text/plain');
             },
           ),
         ),
@@ -212,7 +217,7 @@ class MyDrawer extends StatelessWidget {
               'Read The Privacy Ploicy',
             ),
             onTap: () {
-              launchURL('http://instagram.com/Morning_friends');
+              launchURL('http://dev3pro.com/index/privacy_policy.html');
             },
           ),
         ),
@@ -230,7 +235,7 @@ class MyDrawer extends StatelessWidget {
               'Rate This App In Play Store',
             ),
             onTap: () {
-              launchURL('http://instagram.com/Morning_friends');
+              launchURL(constant.prefixstore + constant.package);
             },
           ),
         ),
