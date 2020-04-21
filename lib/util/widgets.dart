@@ -175,7 +175,9 @@ class MyDrawer extends StatelessWidget {
             subtitle: Text(
               'Find More Apps',
             ),
-            onTap: () {},
+            onTap: () {
+              launchURL('http://instagram.com/Morning_friends');
+            },
           ),
         ),
         Card(
@@ -191,7 +193,7 @@ class MyDrawer extends StatelessWidget {
             subtitle: Text(
               'Share App With Your Friends',
             ),
-            onTap: () {},
+            onTap: () {launchURL('http://instagram.com/Morning_friends');},
           ),
         ),
         Card(
@@ -207,7 +209,7 @@ class MyDrawer extends StatelessWidget {
             subtitle: Text(
               'Read The Privacy Ploicy',
             ),
-            onTap: () {},
+            onTap: () {launchURL('http://instagram.com/Morning_friends');},
           ),
         ),
         Card(
@@ -223,7 +225,7 @@ class MyDrawer extends StatelessWidget {
             subtitle: Text(
               'Rate This App In Play Store',
             ),
-            onTap: () {},
+            onTap: () {launchURL('http://instagram.com/Morning_friends');},
           ),
         ),
       ],
