@@ -69,7 +69,7 @@ Widget getBannerFB() {
   return Container(
     alignment: Alignment(0.5, 1),
     child: FacebookBannerAd(
-      placementId: "YOUR_PLACEMENT_ID",
+      placementId: constant.banner,
       bannerSize: BannerSize.STANDARD,
       listener: (result, value) {
         switch (result) {

@@ -12,7 +12,6 @@ class ImagesGrabber {
           /// and make them Favored  by isfav=1
           ImageItem imageItem = new ImageItem.fromJson(v);
           imageItem.isfav = 0;
-          print("ImageGrabber");
 
           ///decode Unicode String To proper String
 //          var parts = imageItem.catName.split('u')..removeAt(0);
@@ -20,8 +19,7 @@ class ImagesGrabber {
 //          imageItem.catName = String.fromCharCodes(
 //            parts.map<int>((hex) => int.parse(hex, radix: 16)),
 //          );
-
-          print(imageItem.imageUrl);
+          // print(imageItem.imageUrl);
           ImageItem isFavouriteCheck = dbImages.firstWhere(
               (image) =>
                   imageItem.imageUrl + imageItem.catName ==

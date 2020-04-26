@@ -52,10 +52,6 @@ class constant {
 
   //My package name
   static final String package = "com.wallchina.flowers";
-
-  static final String fjhg = "Bom Dia";
-
-  static final String lhlk = "Bom nnnn";
   // banner
   static final String banner = "756894781441261_758902417907164";
 
@@ -113,4 +109,6 @@ class constant {
   static final String CATEGORY_ITEM_CATNAME = "cat_name";
   static final String CATEGORY_ITEM_IMAGEURL = "images";
   static String prefixstore = 'https://play.google.com/store/apps/details?id=';
+
+  static String seco;
 }
