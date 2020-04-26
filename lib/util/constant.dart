@@ -49,6 +49,7 @@ const String resizeImage = 'resizeImage';
 class constant {
   // name
   static final String nameApp = "鲜花照片";
+  static final String nameAvpp = "鲜花照片";
 
   //My package name
   static final String package = "com.wallchina.flowers";
